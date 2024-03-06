@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <tchar.h>
+#include <CommCtrl.h>
+#pragma comment(lib, "Comctl32.lib")
+
 
 #define ID_BUTTON1 1 // Button identifier
 #define ID_BUTTON2 2 // Second Button identifier
@@ -30,6 +33,11 @@ int WINAPI WinMain(
     _In_ int       nCmdShow
 )
 {
+    INITCOMMONCONTROLSEX icex;
+    icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
+    icex.dwICC = ICC_TAB_CLASSES;
+    InitCommonControlsEx(&icex);
+
     WNDCLASSEX wcex;
 
     wcex.cbSize = sizeof(WNDCLASSEX);
@@ -122,10 +130,39 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     HDC hdc;
     TCHAR greeting[] = _T("Hello, Jay!");
     HWND hwndButton1, hwndButton2;
+    HWND hwndTab;
+    TCITEM tie;
 
+    // Create the SPWSTRs for the tabs
+    
+    char text1[] = "Tab 1";
+    wchar_t wtext1[20];
+    mbstowcs(wtext1, text1, strlen(text1) + 1);//Plus null
+    LPWSTR ptr1 = wtext1;
+
+    char text2[] = "Tab 2";
+    wchar_t wtext2[20];
+    mbstowcs(wtext2, text2, strlen(text2) + 1);//Plus null
+    LPWSTR ptr2 = wtext2;
+ 
     switch (message)
     {
     case WM_CREATE:
+        hwndTab = CreateWindow(WC_TABCONTROL, _T(""),
+            WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE,
+            0, 0, 360, 120, hWnd, NULL, hInst, NULL);
+
+        // Zero out the TCITEM structure.
+        ZeroMemory(&tie, sizeof(TCITEM));
+
+        tie.mask = TCIF_TEXT;
+        tie.pszText = ptr1;
+        TabCtrl_InsertItem(hwndTab, 0, &tie);
+
+        tie.pszText = ptr2;
+        TabCtrl_InsertItem(hwndTab, 1, &tie);
+
+
         // Create a push button
         hwndButton1 = CreateWindow(
             TEXT("BUTTON"),  // Predefined class; Unicode assumed 
