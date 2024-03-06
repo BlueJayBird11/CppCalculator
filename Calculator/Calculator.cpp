@@ -35,11 +35,6 @@ int WINAPI WinMain(
     _In_ int       nCmdShow
 )
 {
-    INITCOMMONCONTROLSEX icex;
-    icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
-    icex.dwICC = ICC_TAB_CLASSES;
-    InitCommonControlsEx(&icex);
-
     WNDCLASSEX wcex;
 
     wcex.cbSize = sizeof(WNDCLASSEX);
@@ -131,61 +126,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     PAINTSTRUCT ps;
     HDC hdc;
     TCHAR greeting[] = _T("Hello, Jay!");
-    static HWND hwndButton1 = NULL;
-    static HWND hwndButton2 = NULL;
-    static HWND hwndTab = NULL;
-    // TCITEM tie;
-    TCITEM tie = { 0 };
-
-    // Create the SPWSTRs for the tabs
-    
-    char text1[] = "Calculator";
-    wchar_t wtext1[20];
-    mbstowcs(wtext1, text1, strlen(text1) + 1);//Plus null
-    LPWSTR ptr1 = wtext1;
-
-    char text2[] = "Trace Logic";
-    wchar_t wtext2[20];
-    mbstowcs(wtext2, text2, strlen(text2) + 1);//Plus null
-    LPWSTR ptr2 = wtext2;
- 
-    // NMHDR* pNmhdr = (NMHDR*)lParam;
-    NMHDR* pNmhdr = reinterpret_cast<NMHDR*>(lParam);
-    TCHAR test[] = _T("Hellooooooooooooooooooooo");
-
+    HWND hwndButton1, hwndButton2;
 
     switch (message)
     {
-        case WM_CREATE:
-            std::cout << "CREATE EVERYTHING" << std::endl;
-            hwndTab = CreateWindow(WC_TABCONTROL, _T(""),
-                WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE,
-                0, 0, 500, 600, hWnd, NULL, hInst, NULL);
-
-            // Zero out the TCITEM structure.
-            ZeroMemory(&tie, sizeof(TCITEM));
-
-            tie.mask = TCIF_TEXT;
-            tie.pszText = ptr1;
-            TabCtrl_InsertItem(hwndTab, 0, &tie);
-
-            tie.pszText = ptr2;
-            TabCtrl_InsertItem(hwndTab, 1, &tie);
-
-
-            // Create a push button
-            hwndButton1 = CreateWindow(
-                TEXT("BUTTON"),  // Predefined class; Unicode assumed 
-                TEXT("1"),      // Button text 
-                WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,  // Styles 
-                10,         // x position 
-                50,         // y position 
-                100,        // Button width
-                30,        // Button height
-                hwndTab,     // Parent window
-                (HMENU)ID_BUTTON1,       // No menu.
-                (HINSTANCE)GetWindowLongPtr(hwndTab, GWLP_HINSTANCE),
-                NULL);      // Pointer not needed.
+    case WM_CREATE:
+        // Create a push button
+        hwndButton1 = CreateWindow(
+            TEXT("BUTTON"),  // Predefined class; Unicode assumed 
+            TEXT("1"),      // Button text 
+            WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,  // Styles 
+            10,         // x position 
+            50,         // y position 
+            100,        // Button width
+            30,        // Button height
+            hWnd,     // Parent window
+            (HMENU)ID_BUTTON1,       // No menu.
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
+            NULL);      // Pointer not needed.
 
             // Create the second button
             hwndButton2 = CreateWindow(
