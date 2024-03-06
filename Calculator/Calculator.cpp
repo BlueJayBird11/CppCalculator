@@ -6,8 +6,8 @@
 #include <string.h>
 #include <tchar.h>
 
-#define ID_BUTTON 1 // Button identifier
-
+#define ID_BUTTON1 1 // Button identifier
+#define ID_BUTTON2 2 // Second Button identifier
 
 // Global variables
 
@@ -121,28 +121,58 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     PAINTSTRUCT ps;
     HDC hdc;
     TCHAR greeting[] = _T("Hello, Jay!");
+    HWND hwndButton1, hwndButton2;
 
     switch (message)
     {
+    case WM_CREATE:
+        // Create a push button
+        hwndButton1 = CreateWindow(
+            TEXT("BUTTON"),  // Predefined class; Unicode assumed 
+            TEXT("1"),      // Button text 
+            WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,  // Styles 
+            10,         // x position 
+            50,         // y position 
+            100,        // Button width
+            30,        // Button height
+            hWnd,     // Parent window
+            (HMENU)ID_BUTTON1,       // No menu.
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
+            NULL);      // Pointer not needed.
+
+        // Create the second button
+        hwndButton2 = CreateWindow(
+            TEXT("BUTTON"),  // Predefined class; Unicode assumed
+            TEXT("2"),   // Button text
+            WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,  // Styles
+            120,        // x position, to the right of the first button
+            50,         // y position, same as the first button
+            100,        // Button width
+            30,         // Button height
+            hWnd,     // Parent window
+            (HMENU)ID_BUTTON2,       // Button identifier
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
+            NULL);      // Pointer not needed.
+
+        break;
     case WM_PAINT:
         hdc = BeginPaint(hWnd, &ps);
-
-        // Here your application is laid out.
-        // For this introduction, we just print out "Hello, Windows desktop!"
-        // in the top left corner.
-        TextOut(hdc,
-            10, 10,
-            greeting, _tcslen(greeting));
-        // End application-specific layout section.
-
+        TextOut(hdc, 10, 10, greeting, _tcslen(greeting));
         EndPaint(hWnd, &ps);
         break;
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
+    case WM_COMMAND:
+        if (LOWORD(wParam) == ID_BUTTON1) {
+            MessageBox(hWnd, TEXT("1 Button clicked!"), TEXT("Message"), MB_OK);
+        }
+        else if (LOWORD(wParam) == ID_BUTTON2) {
+            MessageBox(hWnd, TEXT("2 Button clicked!"), TEXT("Message"), MB_OK);
+        }
+        break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
-        break;
     }
 
     return 0;
