@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <tchar.h>
+#include <iostream>
+#include <string>
 #include <CommCtrl.h>
 #pragma comment(lib, "Comctl32.lib")
 
@@ -129,8 +131,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     PAINTSTRUCT ps;
     HDC hdc;
     TCHAR greeting[] = _T("Hello, Jay!");
-    HWND hwndButton1, hwndButton2;
-    HWND hwndTab;
+    static HWND hwndButton1 = NULL;
+    static HWND hwndButton2 = NULL;
+    static HWND hwndTab = NULL;
     // TCITEM tie;
     TCITEM tie = { 0 };
 
@@ -146,11 +149,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     mbstowcs(wtext2, text2, strlen(text2) + 1);//Plus null
     LPWSTR ptr2 = wtext2;
  
-    NMHDR* pNmhdr = (NMHDR*)lParam;
+    // NMHDR* pNmhdr = (NMHDR*)lParam;
+    NMHDR* pNmhdr = reinterpret_cast<NMHDR*>(lParam);
+    TCHAR test[] = _T("Hellooooooooooooooooooooo");
+
 
     switch (message)
     {
         case WM_CREATE:
+            std::cout << "CREATE EVERYTHING" << std::endl;
             hwndTab = CreateWindow(WC_TABCONTROL, _T(""),
                 WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE,
                 0, 0, 500, 600, hWnd, NULL, hInst, NULL);
@@ -193,9 +200,40 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 (HMENU)ID_BUTTON2,       // Button identifier
                 (HINSTANCE)GetWindowLongPtr(hwndTab, GWLP_HINSTANCE),
                 NULL);      // Pointer not needed.
+            
+            // ShowWindow(hwndButton1, SW_SHOW);
+            // ShowWindow(hwndButton2, SW_SHOW);
 
             break;
-        
+
+        case WM_NOTIFY:
+            if (pNmhdr->idFrom == 1 && pNmhdr->code == TCN_SELCHANGE) // Check if this is a notification from your tab control.
+            {
+                int iPage = TabCtrl_GetCurSel(pNmhdr->hwndFrom);
+
+                // std::cout << "Here: " << iPage << std::endl;
+                // char const* tempstr = std::to_string(iPage).c_str();
+                //TCHAR debugStr[100];
+                //wsprintf(debugStr, TEXT("Here: %d\n"), iPage);
+                //OutputDebugString(debugStr);
+
+                
+                if (iPage == 0)
+                {
+                    // First tab selected, adjust visibility accordingly
+                    ShowWindow(hwndButton1, SW_SHOW);
+                    ShowWindow(hwndButton2, SW_SHOW);
+                }
+                else if (iPage == 1)
+                {
+                    // Second tab selected, adjust visibility accordingly
+                    ShowWindow(hwndButton1, SW_HIDE);
+                    ShowWindow(hwndButton2, SW_HIDE);
+                }
+
+            }
+            break;
+
         case WM_PAINT:
             hdc = BeginPaint(hWnd, &ps);
             TextOut(hdc, 10, 10, greeting, _tcslen(greeting));
@@ -205,11 +243,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             PostQuitMessage(0);
             break;
         case WM_COMMAND:
+            TCHAR debugStr[100];
+            wsprintf(debugStr, TEXT("Here: %s\n"), LOWORD(wParam));
+            OutputDebugString(debugStr);
             if (LOWORD(wParam) == ID_BUTTON1) {
                 MessageBox(hWnd, TEXT("1 Button clicked!"), TEXT("Message"), MB_OK);
             }
             else if (LOWORD(wParam) == ID_BUTTON2) {
-                MessageBox(hWnd, TEXT("2 Button clicked!"), TEXT("Message"), MB_OK);
+                MessageBox(hwndTab, TEXT("2 Button clicked!"), TEXT("Message"), MB_OK);
             }
             break;
     default:
