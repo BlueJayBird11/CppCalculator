@@ -83,7 +83,7 @@ int WINAPI WinMain(
         szTitle,
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, CW_USEDEFAULT,
-        500, 500,
+        500, 600,
         NULL,
         NULL,
         hInstance,
@@ -131,83 +131,87 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     TCHAR greeting[] = _T("Hello, Jay!");
     HWND hwndButton1, hwndButton2;
     HWND hwndTab;
-    TCITEM tie;
+    // TCITEM tie;
+    TCITEM tie = { 0 };
 
     // Create the SPWSTRs for the tabs
     
-    char text1[] = "Tab 1";
+    char text1[] = "Calculator";
     wchar_t wtext1[20];
     mbstowcs(wtext1, text1, strlen(text1) + 1);//Plus null
     LPWSTR ptr1 = wtext1;
 
-    char text2[] = "Tab 2";
+    char text2[] = "Trace Logic";
     wchar_t wtext2[20];
     mbstowcs(wtext2, text2, strlen(text2) + 1);//Plus null
     LPWSTR ptr2 = wtext2;
  
+    NMHDR* pNmhdr = (NMHDR*)lParam;
+
     switch (message)
     {
-    case WM_CREATE:
-        hwndTab = CreateWindow(WC_TABCONTROL, _T(""),
-            WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE,
-            0, 0, 360, 120, hWnd, NULL, hInst, NULL);
+        case WM_CREATE:
+            hwndTab = CreateWindow(WC_TABCONTROL, _T(""),
+                WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE,
+                0, 0, 500, 600, hWnd, NULL, hInst, NULL);
 
-        // Zero out the TCITEM structure.
-        ZeroMemory(&tie, sizeof(TCITEM));
+            // Zero out the TCITEM structure.
+            ZeroMemory(&tie, sizeof(TCITEM));
 
-        tie.mask = TCIF_TEXT;
-        tie.pszText = ptr1;
-        TabCtrl_InsertItem(hwndTab, 0, &tie);
+            tie.mask = TCIF_TEXT;
+            tie.pszText = ptr1;
+            TabCtrl_InsertItem(hwndTab, 0, &tie);
 
-        tie.pszText = ptr2;
-        TabCtrl_InsertItem(hwndTab, 1, &tie);
+            tie.pszText = ptr2;
+            TabCtrl_InsertItem(hwndTab, 1, &tie);
 
 
-        // Create a push button
-        hwndButton1 = CreateWindow(
-            TEXT("BUTTON"),  // Predefined class; Unicode assumed 
-            TEXT("1"),      // Button text 
-            WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,  // Styles 
-            10,         // x position 
-            50,         // y position 
-            100,        // Button width
-            30,        // Button height
-            hWnd,     // Parent window
-            (HMENU)ID_BUTTON1,       // No menu.
-            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
-            NULL);      // Pointer not needed.
+            // Create a push button
+            hwndButton1 = CreateWindow(
+                TEXT("BUTTON"),  // Predefined class; Unicode assumed 
+                TEXT("1"),      // Button text 
+                WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,  // Styles 
+                10,         // x position 
+                50,         // y position 
+                100,        // Button width
+                30,        // Button height
+                hwndTab,     // Parent window
+                (HMENU)ID_BUTTON1,       // No menu.
+                (HINSTANCE)GetWindowLongPtr(hwndTab, GWLP_HINSTANCE),
+                NULL);      // Pointer not needed.
 
-        // Create the second button
-        hwndButton2 = CreateWindow(
-            TEXT("BUTTON"),  // Predefined class; Unicode assumed
-            TEXT("2"),   // Button text
-            WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,  // Styles
-            120,        // x position, to the right of the first button
-            50,         // y position, same as the first button
-            100,        // Button width
-            30,         // Button height
-            hWnd,     // Parent window
-            (HMENU)ID_BUTTON2,       // Button identifier
-            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
-            NULL);      // Pointer not needed.
+            // Create the second button
+            hwndButton2 = CreateWindow(
+                TEXT("BUTTON"),  // Predefined class; Unicode assumed
+                TEXT("2"),   // Button text
+                WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,  // Styles
+                120,        // x position, to the right of the first button
+                50,         // y position, same as the first button
+                100,        // Button width
+                30,         // Button height
+                hwndTab,     // Parent window
+                (HMENU)ID_BUTTON2,       // Button identifier
+                (HINSTANCE)GetWindowLongPtr(hwndTab, GWLP_HINSTANCE),
+                NULL);      // Pointer not needed.
 
-        break;
-    case WM_PAINT:
-        hdc = BeginPaint(hWnd, &ps);
-        TextOut(hdc, 10, 10, greeting, _tcslen(greeting));
-        EndPaint(hWnd, &ps);
-        break;
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        break;
-    case WM_COMMAND:
-        if (LOWORD(wParam) == ID_BUTTON1) {
-            MessageBox(hWnd, TEXT("1 Button clicked!"), TEXT("Message"), MB_OK);
-        }
-        else if (LOWORD(wParam) == ID_BUTTON2) {
-            MessageBox(hWnd, TEXT("2 Button clicked!"), TEXT("Message"), MB_OK);
-        }
-        break;
+            break;
+        
+        case WM_PAINT:
+            hdc = BeginPaint(hWnd, &ps);
+            TextOut(hdc, 10, 10, greeting, _tcslen(greeting));
+            EndPaint(hWnd, &ps);
+            break;
+        case WM_DESTROY:
+            PostQuitMessage(0);
+            break;
+        case WM_COMMAND:
+            if (LOWORD(wParam) == ID_BUTTON1) {
+                MessageBox(hWnd, TEXT("1 Button clicked!"), TEXT("Message"), MB_OK);
+            }
+            else if (LOWORD(wParam) == ID_BUTTON2) {
+                MessageBox(hWnd, TEXT("2 Button clicked!"), TEXT("Message"), MB_OK);
+            }
+            break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
