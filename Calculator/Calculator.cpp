@@ -46,6 +46,9 @@ static TCHAR szTitle[] = _T("Calculator");
 // HBRUSH hBackgroundBrush = NULL;
 bool trace_on = false;
 
+std::wstring entry = L"";
+std::wstring traceHistory = L"";
+
 // Stored instance handle for use in Win32 API calls such as FindResource
 HINSTANCE hInst;
 
@@ -229,7 +232,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         // calculator text
         hwndOutputText = CreateWindow(
             TEXT("STATIC"),  // Predefined class; STATIC for text
-            TEXT("Your Text Here"),  // Text to be displayed
+            TEXT(""),  // Text to be displayed
             WS_VISIBLE | WS_CHILD | SS_RIGHT,  // Style: Visible, a child window, left-aligned text
             start_x,         // x position
             start_y - start_y / 2 - button_size / 2,         // y position
@@ -668,10 +671,82 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         wsprintf(debugStr, TEXT("Button_id: %i\n"), LOWORD(wParam));
         OutputDebugString(debugStr);
         if (LOWORD(wParam) == ID_BUTTON1) {
-            MessageBox(hWnd, TEXT("1 Button clicked!"), TEXT("Message"), MB_OK);
+            // MessageBox(hWnd, TEXT("1 Button clicked!"), TEXT("Message"), MB_OK);
+            entry = entry + L"1";
+            SetWindowText(hwndOutputText, entry.c_str());
         }
         else if (LOWORD(wParam) == ID_BUTTON2) {
-            MessageBox(hwndTab, TEXT("2 Button clicked!"), TEXT("Message"), MB_OK);
+            entry = entry + L"2";
+            SetWindowText(hwndOutputText, entry.c_str());
+        }
+        else if (LOWORD(wParam) == ID_BUTTON3) {
+            entry = entry + L"3";
+            SetWindowText(hwndOutputText, entry.c_str());
+        }
+        else if (LOWORD(wParam) == ID_BUTTON4) {
+            entry = entry + L"4";
+            SetWindowText(hwndOutputText, entry.c_str());
+        }
+        else if (LOWORD(wParam) == ID_BUTTON5) {
+            entry = entry + L"5";
+            SetWindowText(hwndOutputText, entry.c_str());
+        }
+        else if (LOWORD(wParam) == ID_BUTTON6) {
+            entry = entry + L"6";
+            SetWindowText(hwndOutputText, entry.c_str());
+        }
+        else if (LOWORD(wParam) == ID_BUTTON7) {
+            entry = entry + L"7";
+            SetWindowText(hwndOutputText, entry.c_str());
+        }
+        else if (LOWORD(wParam) == ID_BUTTON8) {
+            entry = entry + L"8";
+            SetWindowText(hwndOutputText, entry.c_str());
+        }
+        else if (LOWORD(wParam) == ID_BUTTON9) {
+            entry = entry + L"9";
+            SetWindowText(hwndOutputText, entry.c_str());
+        }
+        else if (LOWORD(wParam) == ID_BUTTON10) {
+            entry = entry + L"0";
+            SetWindowText(hwndOutputText, entry.c_str());
+        }
+        else if (LOWORD(wParam) == ID_BUTTON_DEC) {
+            entry = entry + L".";
+            SetWindowText(hwndOutputText, entry.c_str());
+        }
+        else if (LOWORD(wParam) == ID_BUTTON_PLUS) {
+            entry = entry + L"+";
+            SetWindowText(hwndOutputText, entry.c_str());
+        }
+        else if (LOWORD(wParam) == ID_BUTTON_MIN) {
+            entry = entry + L"-";
+            SetWindowText(hwndOutputText, entry.c_str());
+        }
+        else if (LOWORD(wParam) == ID_BUTTON_MULT) {
+            entry = entry + L"*";
+            SetWindowText(hwndOutputText, entry.c_str());
+        }
+        else if (LOWORD(wParam) == ID_BUTTON_DIV) {
+            entry = entry + L"/";
+            SetWindowText(hwndOutputText, entry.c_str());
+        }
+        else if (LOWORD(wParam) == ID_BUTTON_PER) {
+            entry = entry + L"%";
+            SetWindowText(hwndOutputText, entry.c_str());
+        }
+        else if (LOWORD(wParam) == ID_BUTTON_C) {
+            entry = L"";
+            traceHistory = L"";
+            SetWindowText(hwndOutputText, entry.c_str());
+            SetWindowText(hwndTextTrace, traceHistory.c_str());
+        }
+        else if (LOWORD(wParam) == ID_BUTTON_CE) {
+            entry = L"";
+            SetWindowText(hwndOutputText, entry.c_str());
+        }
+        else if (LOWORD(wParam) == ID_BUTTON_EQ) {
+            // computer entry
         }
         else if (LOWORD(wParam) == ID_BUTTON_TRACE_ON) {
             EnableWindow(hwndButtonTraceOff, TRUE);
