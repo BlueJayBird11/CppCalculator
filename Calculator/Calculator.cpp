@@ -33,6 +33,7 @@
 #define ID_TEXT_OUTPUT 20
 #define ID_BUTTON_TRACE_ON 21
 #define ID_BUTTON_TRACE_OFF 22
+#define ID_TEXT_TRACE 23
 
 // Global variables
 
@@ -178,6 +179,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static HWND hwndTab = NULL;
     static HWND hwndButtonTraceOn = NULL;
     static HWND hwndButtonTraceOff = NULL;
+    static HWND hwndTextTrace = NULL;
 
     // HBRUSH hbrBkgnd = NULL; // Handle to the brush
 
@@ -204,12 +206,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     // NMHDR* pNmhdr = (NMHDR*)lParam;
     NMHDR* pNmhdr = reinterpret_cast<NMHDR*>(lParam);
-    TCHAR test[] = _T("Hellooooooooooooooooooooo");
 
     int iPage;
-
-    LPNMHDR lpnmhdr = NULL; // (LPNMHDR)lParam;
-
 
     switch (message)
     {
@@ -243,18 +241,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             NULL);      // Pointer not needed
 
         // trace text
-        /*hwndOutputText = CreateWindow(
+        hwndTextTrace = CreateWindow(
             TEXT("STATIC"),  // Predefined class; STATIC for text
-            TEXT("Yoooooooooooooo, Hooooooooooooooooooo"),  // Text to be displayed
-            WS_VISIBLE | WS_CHILD | SS_RIGHT,  // Style: Visible, a child window, left-aligned text
+            TEXT(""),  // Text to be displayed
+            WS_VISIBLE | WS_CHILD | SS_LEFT,  // Style: Visible, a child window, left-aligned text
             10,         // x position
-            10,         // y position
-            start_x + 5 * spacing - button_size / 2,        // Width of the text block
-            20,         // Height of the text block
+            30,         // y position
+            360,        // Width of the text block
+            410,         // Height of the text block
             hWnd,       // Parent window
-            (HMENU)ID_TEXT_OUTPUT, // Identifier for the static control (optional, can be NULL if not using)
+            (HMENU)ID_TEXT_TRACE, // Identifier for the static control (optional, can be NULL if not using)
             (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
-            NULL);      // Pointer not needed*/
+            NULL);      // Pointer not needed
+
+        ShowWindow(hwndTextTrace, SW_HIDE);
 
         // Create a push button 1
         hwndButton1 = CreateWindow(
@@ -565,7 +565,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         HDC hdcStatic = (HDC)wParam;
         HWND hwndStatic = (HWND)lParam;
 
-        if (GetDlgCtrlID(hwndStatic) == ID_TEXT_OUTPUT) // Check if this is your static control
+        if (GetDlgCtrlID(hwndStatic) == ID_TEXT_OUTPUT or GetDlgCtrlID(hwndStatic) == ID_TEXT_TRACE) // Check if this is your static control
         {
             // Set the text color
             // SetTextColor(hdcStatic, RGB(255, 0, 0)); // Red text
@@ -582,15 +582,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 
     case WM_NOTIFY:
-        //TCHAR debugStr[100];
-        //wsprintf(debugStr, TEXT("WM_NOTIFY: %s\n"), pNmhdr->idFrom == 1);
-        //OutputDebugString(debugStr);
         //if (pNmhdr->idFrom == 1 && pNmhdr->code == TCN_SELCHANGE) // Check if this is a notification from your tab control.
         //{
             iPage = TabCtrl_GetCurSel(pNmhdr->hwndFrom);
-
-            // std::cout << "Here: " << iPage << std::endl;
-            // char const* tempstr = std::to_string(iPage).c_str();
             //TCHAR debugStr[100];
             //wsprintf(debugStr, TEXT("Here: %d\n"), iPage);
             //OutputDebugString(debugStr);
@@ -623,6 +617,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
                 ShowWindow(hwndButtonTraceOn, SW_SHOW);
                 ShowWindow(hwndButtonTraceOff, SW_SHOW);
+
+                ShowWindow(hwndTextTrace, SW_HIDE);
+
             }
             else if (iPage == 1)
             {
@@ -652,36 +649,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 ShowWindow(hwndButtonTraceOn, SW_HIDE);
                 ShowWindow(hwndButtonTraceOff, SW_HIDE);
 
-            }
-            lpnmhdr = (LPNMHDR)lParam;
-            if (lpnmhdr->hwndFrom == hwndTab) // Check if the notification is from your tab control
-            {
-                
-                switch (lpnmhdr->code)
-                {
-                case NM_CUSTOMDRAW:
-                {
-                    LPNMCUSTOMDRAW lpnmcd = (LPNMCUSTOMDRAW)lParam;
-                    switch (lpnmcd->dwDrawStage)
-                    {
-                    case CDDS_PREPAINT:
-                        // Return CDRF_NOTIFYITEMDRAW to receive draw notifications for each item.
-                        return CDRF_NOTIFYITEMDRAW;
+                ShowWindow(hwndTextTrace, SW_SHOW);
 
-                    case CDDS_ITEMPREPAINT:
-                        TCHAR debugStr[100];
-                        wsprintf(debugStr, TEXT("TAB: %s\n"), pNmhdr->idFrom == 1);
-                        OutputDebugString(debugStr);
-                        // Here you can customize the painting of individual items or the background.
-                        // Set the background color.
-                        SetBkColor(lpnmcd->hdc, RGB(0, 120, 215));
-                        // Return CDRF_DODEFAULT to proceed with default drawing, or do your own drawing here.
-                        return CDRF_DODEFAULT;
-                    }
-                }
-                }
             }
-
         // }
         break;
 
