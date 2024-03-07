@@ -30,6 +30,7 @@
 #define ID_BUTTON_DIV 17
 #define ID_BUTTON_EQ 18
 #define ID_BUTTON_PER 19
+#define ID_TEXT_OUTPUT 20
 
 // Global variables
 
@@ -38,6 +39,8 @@ static TCHAR szWindowClass[] = _T("DesktopApp");
 
 // The string that appears in the application's title bar.
 static TCHAR szTitle[] = _T("Calculator");
+
+// HBRUSH hBackgroundBrush = NULL;
 
 // Stored instance handle for use in Win32 API calls such as FindResource
 HINSTANCE hInst;
@@ -59,6 +62,8 @@ int WINAPI WinMain(
 
     WNDCLASSEX wcex;
 
+    // hBackgroundBrush = CreateSolidBrush(RGB(0, 120, 215));
+
     wcex.cbSize = sizeof(WNDCLASSEX);
     wcex.style = CS_HREDRAW | CS_VREDRAW;
     wcex.lpfnWndProc = WndProc;
@@ -67,7 +72,7 @@ int WINAPI WinMain(
     wcex.hInstance = hInstance;
     wcex.hIcon = LoadIcon(wcex.hInstance, IDI_APPLICATION);
     wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
-    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1); // (HBRUSH)(COLOR_WINDOW + 1)
     wcex.lpszMenuName = NULL;
     wcex.lpszClassName = szWindowClass;
     wcex.hIconSm = LoadIcon(wcex.hInstance, IDI_APPLICATION);
@@ -168,6 +173,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static HWND hwndButtonEq = NULL;
     static HWND hwndButtonPer = NULL;
     static HWND hwndTab = NULL;
+
+    HBRUSH hbrBkgnd = NULL; // Handle to the brush
+
+    static HWND hwndOutputText = NULL;
     // TCITEM tie;
     TCITEM tie = { 0 };
 
@@ -194,11 +203,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     int iPage;
 
+    LPNMHDR lpnmhdr = NULL; // (LPNMHDR)lParam;
+
 
     switch (message)
     {
     case WM_CREATE:
-        std::cout << "CREATE EVERYTHING" << std::endl;
         hwndTab = CreateWindow(WC_TABCONTROL, _T(""),
             WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE,
             0, 0, 500, 600, hWnd, NULL, hInst, NULL);
@@ -213,6 +223,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         tie.pszText = ptr2;
         TabCtrl_InsertItem(hwndTab, 1, &tie);
 
+        hwndOutputText = CreateWindow(
+            TEXT("STATIC"),  // Predefined class; STATIC for text
+            TEXT("Your Text Here"),  // Text to be displayed
+            WS_VISIBLE | WS_CHILD | SS_RIGHT,  // Style: Visible, a child window, left-aligned text
+            10,         // x position
+            start_y - start_y / 2 - button_size / 2,         // y position
+            start_x + 5 * spacing - button_size / 2,        // Width of the text block
+            20,         // Height of the text block
+            hWnd,       // Parent window
+            (HMENU)ID_TEXT_OUTPUT, // Identifier for the static control (optional, can be NULL if not using)
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
+            NULL);      // Pointer not needed
 
         // Create a push button 1
         hwndButton1 = CreateWindow(
@@ -487,9 +509,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
 
     case WM_NOTIFY:
-        TCHAR debugStr[100];
-        wsprintf(debugStr, TEXT("WM_NOTIFY: %s\n"), pNmhdr->idFrom == 1);
-        OutputDebugString(debugStr);
+        //TCHAR debugStr[100];
+        //wsprintf(debugStr, TEXT("WM_NOTIFY: %s\n"), pNmhdr->idFrom == 1);
+        //OutputDebugString(debugStr);
         //if (pNmhdr->idFrom == 1 && pNmhdr->code == TCN_SELCHANGE) // Check if this is a notification from your tab control.
         //{
             iPage = TabCtrl_GetCurSel(pNmhdr->hwndFrom);
@@ -524,6 +546,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 ShowWindow(hwndButtonMinus, SW_SHOW);
                 ShowWindow(hwndButtonEq, SW_SHOW);
                 ShowWindow(hwndButtonPer, SW_SHOW);
+                ShowWindow(hwndOutputText, SW_SHOW);
             }
             else if (iPage == 1)
             {
@@ -548,7 +571,36 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 ShowWindow(hwndButtonMinus, SW_HIDE);
                 ShowWindow(hwndButtonEq, SW_HIDE);
                 ShowWindow(hwndButtonPer, SW_HIDE);
+                ShowWindow(hwndOutputText, SW_HIDE);
 
+            }
+            lpnmhdr = (LPNMHDR)lParam;
+            if (lpnmhdr->hwndFrom == hwndTab) // Check if the notification is from your tab control
+            {
+                
+                switch (lpnmhdr->code)
+                {
+                case NM_CUSTOMDRAW:
+                {
+                    LPNMCUSTOMDRAW lpnmcd = (LPNMCUSTOMDRAW)lParam;
+                    switch (lpnmcd->dwDrawStage)
+                    {
+                    case CDDS_PREPAINT:
+                        // Return CDRF_NOTIFYITEMDRAW to receive draw notifications for each item.
+                        return CDRF_NOTIFYITEMDRAW;
+
+                    case CDDS_ITEMPREPAINT:
+                        TCHAR debugStr[100];
+                        wsprintf(debugStr, TEXT("TAB: %s\n"), pNmhdr->idFrom == 1);
+                        OutputDebugString(debugStr);
+                        // Here you can customize the painting of individual items or the background.
+                        // Set the background color.
+                        SetBkColor(lpnmcd->hdc, RGB(0, 120, 215));
+                        // Return CDRF_DODEFAULT to proceed with default drawing, or do your own drawing here.
+                        return CDRF_DODEFAULT;
+                    }
+                }
+                }
             }
 
         // }
