@@ -31,6 +31,8 @@
 #define ID_BUTTON_EQ 18
 #define ID_BUTTON_PER 19
 #define ID_TEXT_OUTPUT 20
+#define ID_BUTTON_TRACE_ON 21
+#define ID_BUTTON_TRACE_OFF 22
 
 // Global variables
 
@@ -41,6 +43,7 @@ static TCHAR szWindowClass[] = _T("DesktopApp");
 static TCHAR szTitle[] = _T("Calculator");
 
 // HBRUSH hBackgroundBrush = NULL;
+bool trace_on = false;
 
 // Stored instance handle for use in Win32 API calls such as FindResource
 HINSTANCE hInst;
@@ -107,7 +110,7 @@ int WINAPI WinMain(
         szTitle,
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, CW_USEDEFAULT,
-        500, 600,
+        400, 500,
         NULL,
         NULL,
         hInstance,
@@ -173,15 +176,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static HWND hwndButtonEq = NULL;
     static HWND hwndButtonPer = NULL;
     static HWND hwndTab = NULL;
+    static HWND hwndButtonTraceOn = NULL;
+    static HWND hwndButtonTraceOff = NULL;
 
-    HBRUSH hbrBkgnd = NULL; // Handle to the brush
+    // HBRUSH hbrBkgnd = NULL; // Handle to the brush
 
     static HWND hwndOutputText = NULL;
     // TCITEM tie;
     TCITEM tie = { 0 };
 
     int start_x = 15;
-    int start_y = 350;
+    int start_y = 290;
     int button_size = 50;
     int spacing = 70;
 
@@ -211,7 +216,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_CREATE:
         hwndTab = CreateWindow(WC_TABCONTROL, _T(""),
             WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE,
-            0, 0, 500, 600, hWnd, NULL, hInst, NULL);
+            0, 0, 400, 500, hWnd, NULL, hInst, NULL);
 
         // Zero out the TCITEM structure.
         ZeroMemory(&tie, sizeof(TCITEM));
@@ -223,18 +228,33 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         tie.pszText = ptr2;
         TabCtrl_InsertItem(hwndTab, 1, &tie);
 
+        // calculator text
         hwndOutputText = CreateWindow(
             TEXT("STATIC"),  // Predefined class; STATIC for text
             TEXT("Your Text Here"),  // Text to be displayed
             WS_VISIBLE | WS_CHILD | SS_RIGHT,  // Style: Visible, a child window, left-aligned text
-            10,         // x position
+            start_x,         // x position
             start_y - start_y / 2 - button_size / 2,         // y position
-            start_x + 5 * spacing - button_size / 2,        // Width of the text block
+            start_x + 5 * spacing - button_size / 2 + start_x / 2,        // Width of the text block
             20,         // Height of the text block
             hWnd,       // Parent window
             (HMENU)ID_TEXT_OUTPUT, // Identifier for the static control (optional, can be NULL if not using)
             (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
             NULL);      // Pointer not needed
+
+        // trace text
+        /*hwndOutputText = CreateWindow(
+            TEXT("STATIC"),  // Predefined class; STATIC for text
+            TEXT("Yoooooooooooooo, Hooooooooooooooooooo"),  // Text to be displayed
+            WS_VISIBLE | WS_CHILD | SS_RIGHT,  // Style: Visible, a child window, left-aligned text
+            10,         // x position
+            10,         // y position
+            start_x + 5 * spacing - button_size / 2,        // Width of the text block
+            20,         // Height of the text block
+            hWnd,       // Parent window
+            (HMENU)ID_TEXT_OUTPUT, // Identifier for the static control (optional, can be NULL if not using)
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
+            NULL);      // Pointer not needed*/
 
         // Create a push button 1
         hwndButton1 = CreateWindow(
@@ -502,11 +522,64 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
             NULL);      // Pointer not needed.
 
+        // Trace Button ON
+
+        hwndButtonTraceOn = CreateWindow(
+            TEXT("BUTTON"),  // Predefined class; Unicode assumed
+            TEXT("Intro Trace On"),   // Button text
+            WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,  // Styles
+            start_x + 2 * spacing - spacing / 8,
+            start_y - start_y / 2 - button_size - button_size / 2,
+            button_size * 2,
+            button_size / 2,
+            hWnd,
+            (HMENU)ID_BUTTON_TRACE_ON,
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
+            NULL);      // Pointer not needed.
+
+        // Trace Button OFF
+
+        hwndButtonTraceOff = CreateWindow(
+            TEXT("BUTTON"),  // Predefined class; Unicode assumed
+            TEXT("Intro Trace Off"),   // Button text
+            WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,  // Styles
+            start_x + 3 * spacing + spacing / 2,
+            start_y - start_y / 2 - button_size - button_size / 2,
+            button_size * 2,
+            button_size / 2,
+            hWnd,
+            (HMENU)ID_BUTTON_TRACE_OFF,
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
+            NULL);      // Pointer not needed.
+
+        EnableWindow(hwndButtonTraceOff, FALSE);
+
 
         // ShowWindow(hwndButton1, SW_HIDE);
         // ShowWindow(hwndButton2, SW_SHOW);
 
         break;
+
+    case WM_CTLCOLORSTATIC:
+    {
+        HDC hdcStatic = (HDC)wParam;
+        HWND hwndStatic = (HWND)lParam;
+
+        if (GetDlgCtrlID(hwndStatic) == ID_TEXT_OUTPUT) // Check if this is your static control
+        {
+            // Set the text color
+            // SetTextColor(hdcStatic, RGB(255, 0, 0)); // Red text
+
+            // Set the background color
+            SetBkColor(hdcStatic, RGB(255, 255, 255));
+
+            // Return a handle to the brush that paints the background color
+            static HBRUSH hBrush = CreateSolidBrush(RGB(255, 255, 255));
+            return (INT_PTR)hBrush;
+        }
+    }
+    break;
+
 
     case WM_NOTIFY:
         //TCHAR debugStr[100];
@@ -547,6 +620,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 ShowWindow(hwndButtonEq, SW_SHOW);
                 ShowWindow(hwndButtonPer, SW_SHOW);
                 ShowWindow(hwndOutputText, SW_SHOW);
+
+                ShowWindow(hwndButtonTraceOn, SW_SHOW);
+                ShowWindow(hwndButtonTraceOff, SW_SHOW);
             }
             else if (iPage == 1)
             {
@@ -572,6 +648,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 ShowWindow(hwndButtonEq, SW_HIDE);
                 ShowWindow(hwndButtonPer, SW_HIDE);
                 ShowWindow(hwndOutputText, SW_HIDE);
+
+                ShowWindow(hwndButtonTraceOn, SW_HIDE);
+                ShowWindow(hwndButtonTraceOff, SW_HIDE);
 
             }
             lpnmhdr = (LPNMHDR)lParam;
@@ -615,14 +694,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         PostQuitMessage(0);
         break;
     case WM_COMMAND:
-        // TCHAR debugStr[100];
-        // wsprintf(debugStr, TEXT("Here: %s\n"), LOWORD(wParam));
-        // OutputDebugString(debugStr);
+        TCHAR debugStr[100];
+        wsprintf(debugStr, TEXT("Button_id: %i\n"), LOWORD(wParam));
+        OutputDebugString(debugStr);
         if (LOWORD(wParam) == ID_BUTTON1) {
             MessageBox(hWnd, TEXT("1 Button clicked!"), TEXT("Message"), MB_OK);
         }
         else if (LOWORD(wParam) == ID_BUTTON2) {
             MessageBox(hwndTab, TEXT("2 Button clicked!"), TEXT("Message"), MB_OK);
+        }
+        else if (LOWORD(wParam) == ID_BUTTON_TRACE_ON) {
+            EnableWindow(hwndButtonTraceOff, TRUE);
+            EnableWindow(hwndButtonTraceOn, FALSE);
+            trace_on = TRUE;
+        }
+        else if (LOWORD(wParam) == ID_BUTTON_TRACE_OFF) {
+            EnableWindow(hwndButtonTraceOff, FALSE);
+            EnableWindow(hwndButtonTraceOn, TRUE);
+            trace_on = FALSE;
         }
         break;
     default:
