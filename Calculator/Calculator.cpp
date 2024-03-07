@@ -192,6 +192,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     NMHDR* pNmhdr = reinterpret_cast<NMHDR*>(lParam);
     TCHAR test[] = _T("Hellooooooooooooooooooooo");
 
+    int iPage;
+
 
     switch (message)
     {
@@ -235,9 +237,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             start_y,         // y position, same as the first button
             button_size,        // Button width
             button_size,         // Button height
-            hwndTab,     // Parent window
+            hWnd,     // Parent window
             (HMENU)ID_BUTTON2,       // Button identifier
-            (HINSTANCE)GetWindowLongPtr(hwndTab, GWLP_HINSTANCE),
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
             NULL);      // Pointer not needed.
 
         // 3
@@ -249,9 +251,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             start_y,         // y position, same as the first button
             button_size,        // Button width
             button_size,         // Button height
-            hwndTab,     // Parent window
+            hWnd,     // Parent window
             (HMENU)ID_BUTTON3,       // Button identifier
-            (HINSTANCE)GetWindowLongPtr(hwndTab, GWLP_HINSTANCE),
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
             NULL);      // Pointer not needed.
 
         // 4
@@ -263,9 +265,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             start_y - spacing,         // y position, same as the first button
             button_size,        // Button width
             button_size,         // Button height
-            hwndTab,     // Parent window
+            hWnd,     // Parent window
             (HMENU)ID_BUTTON4,       // Button identifier
-            (HINSTANCE)GetWindowLongPtr(hwndTab, GWLP_HINSTANCE),
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
             NULL);      // Pointer not needed.
 
         // 5
@@ -277,9 +279,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             start_y-spacing,         // y position, same as the first button
             button_size,        // Button width
             button_size,         // Button height
-            hwndTab,     // Parent window
+            hWnd,     // Parent window
             (HMENU)ID_BUTTON5,       // Button identifier
-            (HINSTANCE)GetWindowLongPtr(hwndTab, GWLP_HINSTANCE),
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
             NULL);      // Pointer not needed.
 
         // 6
@@ -291,9 +293,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             start_y - spacing,         // y position, same as the first button
             button_size,        // Button width
             button_size,         // Button height
-            hwndTab,     // Parent window
+            hWnd,     // Parent window
             (HMENU)ID_BUTTON6,       // Button identifier
-            (HINSTANCE)GetWindowLongPtr(hwndTab, GWLP_HINSTANCE),
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
             NULL);      // Pointer not needed.
 
         // 7
@@ -305,9 +307,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             start_y - 2 * spacing,         // y position, same as the first button
             button_size,        // Button width
             button_size,         // Button height
-            hwndTab,     // Parent window
+            hWnd,     // Parent window
             (HMENU)ID_BUTTON7,       // Button identifier
-            (HINSTANCE)GetWindowLongPtr(hwndTab, GWLP_HINSTANCE),
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
             NULL);      // Pointer not needed.
 
         // 8
@@ -319,9 +321,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             start_y - 2 * spacing,         // y position, same as the first button
             button_size,        // Button width
             button_size,         // Button height
-            hwndTab,     // Parent window
+            hWnd,     // Parent window
             (HMENU)ID_BUTTON8,       // Button identifier
-            (HINSTANCE)GetWindowLongPtr(hwndTab, GWLP_HINSTANCE),
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
             NULL);      // Pointer not needed.
 
         // 9
@@ -333,9 +335,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             start_y - 2 * spacing,         // y position, same as the first button
             button_size,        // Button width
             button_size,         // Button height
-            hwndTab,     // Parent window
+            hWnd,     // Parent window
             (HMENU)ID_BUTTON9,       // Button identifier
-            (HINSTANCE)GetWindowLongPtr(hwndTab, GWLP_HINSTANCE),
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
             NULL);      // Pointer not needed.
 
         // 10 (0)
@@ -347,9 +349,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             start_y + spacing,         // y position 
             button_size + spacing,        // Button width
             button_size,        // Button height
-            hwndTab,     // Parent window
+            hWnd,     // Parent window
             (HMENU)ID_BUTTON10,       // No menu.
-            (HINSTANCE)GetWindowLongPtr(hwndTab, GWLP_HINSTANCE),
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
             NULL);      // Pointer not needed.
 
         // DEC
@@ -361,9 +363,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             start_y + spacing,         // y position 
             button_size,        // Button width
             button_size,        // Button height
-            hwndTab,     // Parent window
+            hWnd,     // Parent window
             (HMENU)ID_BUTTON_DEC,       // No menu.
-            (HINSTANCE)GetWindowLongPtr(hwndTab, GWLP_HINSTANCE),
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
             NULL);      // Pointer not needed.
 
         // C
@@ -375,9 +377,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             start_y - 2 * spacing,         // y position, same as the first button
             button_size,        // Button width
             button_size,         // Button height
-            hwndTab,     // Parent window
+            hWnd,     // Parent window
             (HMENU)ID_BUTTON_C,       // Button identifier
-            (HINSTANCE)GetWindowLongPtr(hwndTab, GWLP_HINSTANCE),
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
             NULL);      // Pointer not needed.
 
         // CE
@@ -389,9 +391,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             start_y - 2 * spacing,         // y position, same as the first button
             button_size,        // Button width
             button_size,         // Button height
-            hwndTab,     // Parent window
+            hWnd,     // Parent window
             (HMENU)ID_BUTTON_CE,       // Button identifier
-            (HINSTANCE)GetWindowLongPtr(hwndTab, GWLP_HINSTANCE),
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
             NULL);      // Pointer not needed.
 
         // PLUS
@@ -403,9 +405,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             start_y - spacing,         // y position, same as the first button
             button_size,        // Button width
             button_size,         // Button height
-            hwndTab,     // Parent window
+            hWnd,     // Parent window
             (HMENU)ID_BUTTON_PLUS,       // Button identifier
-            (HINSTANCE)GetWindowLongPtr(hwndTab, GWLP_HINSTANCE),
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
             NULL);      // Pointer not needed.
 
         // MINUS
@@ -417,9 +419,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             start_y - spacing,     
             button_size,       
             button_size,      
-            hwndTab,    
+            hWnd,
             (HMENU)ID_BUTTON_MIN, 
-            (HINSTANCE)GetWindowLongPtr(hwndTab, GWLP_HINSTANCE),
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
             NULL);      // Pointer not needed.
 
         // MULT
@@ -431,9 +433,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             start_y,         // y position, same as the first button
             button_size,        // Button width
             button_size,         // Button height
-            hwndTab,     // Parent window
+            hWnd,     // Parent window
             (HMENU)ID_BUTTON_MULT,       // Button identifier
-            (HINSTANCE)GetWindowLongPtr(hwndTab, GWLP_HINSTANCE),
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
             NULL);      // Pointer not needed.
 
         // DIVIDE
@@ -445,9 +447,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             start_y,
             button_size,
             button_size,
-            hwndTab,
+            hWnd,
             (HMENU)ID_BUTTON_DIV,
-            (HINSTANCE)GetWindowLongPtr(hwndTab, GWLP_HINSTANCE),
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
             NULL);      // Pointer not needed.
 
         // EQ
@@ -459,9 +461,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             start_y + spacing,         // y position, same as the first button
             button_size,        // Button width
             button_size,         // Button height
-            hwndTab,     // Parent window
+            hWnd,     // Parent window
             (HMENU)ID_BUTTON_EQ,       // Button identifier
-            (HINSTANCE)GetWindowLongPtr(hwndTab, GWLP_HINSTANCE),
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
             NULL);      // Pointer not needed.
 
         // PER
@@ -479,15 +481,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             NULL);      // Pointer not needed.
 
 
-        // ShowWindow(hwndButton1, SW_SHOW);
+        // ShowWindow(hwndButton1, SW_HIDE);
         // ShowWindow(hwndButton2, SW_SHOW);
 
         break;
 
     case WM_NOTIFY:
-        if (pNmhdr->idFrom == 1 && pNmhdr->code == TCN_SELCHANGE) // Check if this is a notification from your tab control.
-        {
-            int iPage = TabCtrl_GetCurSel(pNmhdr->hwndFrom);
+        TCHAR debugStr[100];
+        wsprintf(debugStr, TEXT("WM_NOTIFY: %s\n"), pNmhdr->idFrom == 1);
+        OutputDebugString(debugStr);
+        //if (pNmhdr->idFrom == 1 && pNmhdr->code == TCN_SELCHANGE) // Check if this is a notification from your tab control.
+        //{
+            iPage = TabCtrl_GetCurSel(pNmhdr->hwndFrom);
 
             // std::cout << "Here: " << iPage << std::endl;
             // char const* tempstr = std::to_string(iPage).c_str();
@@ -501,15 +506,52 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 // First tab selected, adjust visibility accordingly
                 ShowWindow(hwndButton1, SW_SHOW);
                 ShowWindow(hwndButton2, SW_SHOW);
+                ShowWindow(hwndButton3, SW_SHOW);
+                ShowWindow(hwndButton4, SW_SHOW);
+                ShowWindow(hwndButton5, SW_SHOW);
+                ShowWindow(hwndButton6, SW_SHOW);
+                ShowWindow(hwndButton7, SW_SHOW);
+                ShowWindow(hwndButton8, SW_SHOW);
+                ShowWindow(hwndButton9, SW_SHOW);
+                ShowWindow(hwndButton10, SW_SHOW);
+
+                ShowWindow(hwndButtonDec, SW_SHOW);
+                ShowWindow(hwndButtonC, SW_SHOW);
+                ShowWindow(hwndButtonCE, SW_SHOW);
+                ShowWindow(hwndButtonMult, SW_SHOW);
+                ShowWindow(hwndButtonDiv, SW_SHOW);
+                ShowWindow(hwndButtonPlus, SW_SHOW);
+                ShowWindow(hwndButtonMinus, SW_SHOW);
+                ShowWindow(hwndButtonEq, SW_SHOW);
+                ShowWindow(hwndButtonPer, SW_SHOW);
             }
             else if (iPage == 1)
             {
                 // Second tab selected, adjust visibility accordingly
                 ShowWindow(hwndButton1, SW_HIDE);
                 ShowWindow(hwndButton2, SW_HIDE);
+                ShowWindow(hwndButton3, SW_HIDE);
+                ShowWindow(hwndButton4, SW_HIDE);
+                ShowWindow(hwndButton5, SW_HIDE);
+                ShowWindow(hwndButton6, SW_HIDE);
+                ShowWindow(hwndButton7, SW_HIDE);
+                ShowWindow(hwndButton8, SW_HIDE);
+                ShowWindow(hwndButton9, SW_HIDE);
+                ShowWindow(hwndButton10, SW_HIDE);
+
+                ShowWindow(hwndButtonDec, SW_HIDE);
+                ShowWindow(hwndButtonC, SW_HIDE);
+                ShowWindow(hwndButtonCE, SW_HIDE);
+                ShowWindow(hwndButtonMult, SW_HIDE);
+                ShowWindow(hwndButtonDiv, SW_HIDE);
+                ShowWindow(hwndButtonPlus, SW_HIDE);
+                ShowWindow(hwndButtonMinus, SW_HIDE);
+                ShowWindow(hwndButtonEq, SW_HIDE);
+                ShowWindow(hwndButtonPer, SW_HIDE);
+
             }
 
-        }
+        // }
         break;
 
     case WM_PAINT:
