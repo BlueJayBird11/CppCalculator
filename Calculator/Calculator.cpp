@@ -1,4 +1,3 @@
-// HelloWindowsDesktop.cpp
 // compile with: /D_UNICODE /DUNICODE /DWIN32 /D_WINDOWS /c
 
 #include <windows.h>
@@ -7,6 +6,7 @@
 #include <tchar.h>
 #include <iostream>
 #include <string>
+#include "Computer.h"
 #include <CommCtrl.h>
 #pragma comment(lib, "Comctl32.lib")
 
@@ -48,6 +48,8 @@ bool trace_on = false;
 
 std::wstring entry = L"";
 std::wstring traceHistory = L"";
+
+Computer computer;
 
 // Stored instance handle for use in Win32 API calls such as FindResource
 HINSTANCE hInst;
@@ -747,16 +749,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         else if (LOWORD(wParam) == ID_BUTTON_EQ) {
             // computer entry
+            // entry = L"";
+            entry = computer.calculate(entry);
+            SetWindowText(hwndOutputText, entry.c_str());
         }
         else if (LOWORD(wParam) == ID_BUTTON_TRACE_ON) {
             EnableWindow(hwndButtonTraceOff, TRUE);
             EnableWindow(hwndButtonTraceOn, FALSE);
             trace_on = TRUE;
+            computer.activateTrace();
         }
         else if (LOWORD(wParam) == ID_BUTTON_TRACE_OFF) {
             EnableWindow(hwndButtonTraceOff, FALSE);
             EnableWindow(hwndButtonTraceOn, TRUE);
             trace_on = FALSE;
+            computer.deactivateTrace();
         }
         break;
     default:
