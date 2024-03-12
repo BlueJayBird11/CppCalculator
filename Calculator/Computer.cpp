@@ -132,10 +132,23 @@ int stringToVector(wstring entry, vector<wstring>& items)
     return 0;
 }
 
+void Computer::addToTrace(wstring entry)
+{
+    if (doTrace)
+    {
+        traceHistory += entry;
+    }
+}
+
 wstring Computer::calculate(wstring entry)
 {
-    wcout << "Entry: " << entry << endl;
-    wstring answer = L"end";
+    addToTrace(L"Entry: " + entry + L"\r\r\n");
+    wstring answer = L"0";
+
+    if (entry.length() == 0)
+    {
+        return answer;
+    }
 
     vector<wstring> items;
 
@@ -147,22 +160,23 @@ wstring Computer::calculate(wstring entry)
         return L"SYNTAX ERROR";
     }
 
-    wcout << endl << "Items:" << endl;
+    addToTrace(L"Items:");
 
     for (int i = 0; i < items.size(); i++)
     {
-        wcout << items[i] << ", ";
+        addToTrace(items[i] + L", ");
     }
 
     // CALCULATE ANSWER
     // * and /
-    wcout << endl << "CALCULATE:" << endl;
+    addToTrace(L"\r\nCALCULATE (* and /):\r\n");
     for (int i = 0; i < items.size(); i++)
     {
         wstring current = items[i];
-        wcout << current << ", ";
+        addToTrace(current + L", ");
         if (current == L"*")
         {
+            addToTrace(L"\r\n-'*' found\r\n");
             int t = i + 2;
             wstring number1 = items[i - 1];
             wstring number2 = items[i + 1];
@@ -170,15 +184,19 @@ wstring Computer::calculate(wstring entry)
             {
                 number2 = number2 + items[i + 2];
                 t++;
+                addToTrace(L"--next number is negative\r\n-");
             }
+            addToTrace(number1 + L"*" + number2 + L"=");
             double tempAns = stod(number1) * stod(number2);
-            wcout << endl << tempAns << endl;
-            items[i - 1] = to_wstring(tempAns);
+            wstring tempStrAxs = to_wstring(tempAns);
+            addToTrace(tempStrAxs);
+            items[i - 1] = tempStrAxs;
             items.erase(items.begin() + i, items.begin() + t);
             i--;
         }
-        if (current == L"/")
+        else if (current == L"/")
         {
+            addToTrace(L"\r\n-'/' found\r\n");
             int t = i + 2;
             wstring number1 = items[i - 1];
             wstring number2 = items[i + 1];
@@ -186,28 +204,32 @@ wstring Computer::calculate(wstring entry)
             {
                 number2 = number2 + items[i + 2];
                 t++;
+                addToTrace(L"--next number is negative\r\n-");
             }
             if (stod(number2) == 0.0)
             {
+                addToTrace(L"--next number is 0: ERROR\r\n-");
                 return L"DIV BY 0 ERROR";
             }
+            addToTrace(number1 + L"/" + number2 + L"=");
             double tempAns = stod(number1) / stod(number2);
-            wcout << endl << tempAns << endl;
-            items[i - 1] = to_wstring(tempAns);
+            wstring tempStrAxs = to_wstring(tempAns);
+            addToTrace(tempStrAxs);
+            items[i - 1] = tempStrAxs;
             items.erase(items.begin() + i, items.begin() + t);
             i--;
         }
     }
 
-    // wcout << endl << "*/:" << endl;
-
     // + and -
+    addToTrace(L"\r\nCALCULATE (+ and -):\r\n");
     for (int i = 0; i < items.size(); i++)
     {
         wstring current = items[i];
-        wcout << current << ", ";
+        addToTrace(current + L", ");
         if (current == L"+")
         {
+            addToTrace(L"\r\n-'+' found\r\n");
             int t = i + 2;
             wstring number1 = items[i - 1];
             wstring number2 = items[i + 1];
@@ -215,15 +237,19 @@ wstring Computer::calculate(wstring entry)
             {
                 number2 = number2 + items[i + 2];
                 t++;
+                addToTrace(L"--next number is negative\r\n-");
             }
+            addToTrace(number1 + L"+" + number2 + L"=");
             double tempAns = stod(number1) + stod(number2);
-            wcout << endl << tempAns << endl;
-            items[i - 1] = to_wstring(tempAns);
+            wstring tempStrAxs = to_wstring(tempAns);
+            addToTrace(tempStrAxs);
+            items[i - 1] = tempStrAxs;
             items.erase(items.begin() + i, items.begin() + t);
             i--;
         }
-        if (current == L"-")
+        else if (current == L"-")
         {
+            addToTrace(L"\r\n-'-' found\r\n");
             int t = i + 2;
             wstring number1 = items[i - 1];
             wstring number2 = items[i + 1];
@@ -231,24 +257,19 @@ wstring Computer::calculate(wstring entry)
             {
                 number2 = number2 + items[i + 2];
                 t++;
+                addToTrace(L"--next number is negative\r\n-");
             }
+            addToTrace(number1 + L"-" + number2 + L"=");
             double tempAns = stod(number1) - stod(number2);
-            wcout << endl << tempAns << endl;
-            items[i - 1] = to_wstring(tempAns);
+            wstring tempStrAxs = to_wstring(tempAns);
+            addToTrace(tempStrAxs);
+            items[i - 1] = tempStrAxs;
             items.erase(items.begin() + i, items.begin() + t);
             i--;
         }
     }
 
-    wcout << endl << "Items:" << endl;
-
-    for (int i = 0; i < items.size(); i++)
-    {
-        wcout << items[i] << ", ";
-    }
-
-    wcout << endl << endl;
-
+    addToTrace(L"\r\nRemaining item: " + items[0] + L"\r\n\r\n");
 
     answer = items[0];
 

@@ -15,6 +15,7 @@ private:
     bool doTrace = false;
 
 public:
+    void addToTrace(wstring str);
     wstring calculate(wstring entry);
     wstring calculatePercentage(wstring entry);
     wstring getTraceHistory();

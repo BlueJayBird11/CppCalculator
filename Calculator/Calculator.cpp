@@ -51,6 +51,10 @@ std::wstring traceHistory = L"";
 
 Computer computer;
 
+int state = 0;
+
+void updateEntry(wstring);
+
 // Stored instance handle for use in Win32 API calls such as FindResource
 HINSTANCE hInst;
 
@@ -247,9 +251,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         // trace text
         hwndTextTrace = CreateWindow(
-            TEXT("STATIC"),  // Predefined class; STATIC for text
+            TEXT("EDIT"),  // Predefined class; STATIC for text
             TEXT(""),  // Text to be displayed
-            WS_VISIBLE | WS_CHILD | SS_LEFT,  // Style: Visible, a child window, left-aligned text
+            WS_VISIBLE | WS_CHILD | WS_VSCROLL | ES_LEFT | ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY,
             10,         // x position
             30,         // y position
             360,        // Width of the text block
@@ -668,107 +672,184 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
+    case WM_VSCROLL:
+    {
+        switch (LOWORD(wParam)) {
+        case SB_LINEUP: // User scrolled up
+            // TODO: Move the static control or its content up
+            break;
+        case SB_LINEDOWN: // User scrolled down
+            // TODO: Move the static control or its content down
+            break;
+        }
+        return 0;
+    }
+
     case WM_COMMAND:
         // TCHAR debugStr[100];
         // wsprintf(debugStr, TEXT("Button_id: %i\n"), LOWORD(wParam));
         // OutputDebugString(debugStr);
-        if (LOWORD(wParam) == ID_BUTTON1) {
+        switch (LOWORD(wParam))
+        {
+        case(ID_BUTTON1): {
             // MessageBox(hWnd, TEXT("1 Button clicked!"), TEXT("Message"), MB_OK);
-            entry = entry + L"1";
-            SetWindowText(hwndOutputText, entry.c_str());
+            updateEntry(L"1");
+            break;
         }
-        else if (LOWORD(wParam) == ID_BUTTON2) {
-            entry = entry + L"2";
-            SetWindowText(hwndOutputText, entry.c_str());
+        case(ID_BUTTON2): {
+            updateEntry(L"2");
+            break;
+
         }
-        else if (LOWORD(wParam) == ID_BUTTON3) {
-            entry = entry + L"3";
-            SetWindowText(hwndOutputText, entry.c_str());
+        case(ID_BUTTON3): {
+            updateEntry(L"3");
+            break;
+
         }
-        else if (LOWORD(wParam) == ID_BUTTON4) {
-            entry = entry + L"4";
-            SetWindowText(hwndOutputText, entry.c_str());
+        case(ID_BUTTON4): {
+            updateEntry(L"4");
+            break;
+
         }
-        else if (LOWORD(wParam) == ID_BUTTON5) {
-            entry = entry + L"5";
-            SetWindowText(hwndOutputText, entry.c_str());
+        case(ID_BUTTON5): {
+            updateEntry(L"5");
+            break;
+
         }
-        else if (LOWORD(wParam) == ID_BUTTON6) {
-            entry = entry + L"6";
-            SetWindowText(hwndOutputText, entry.c_str());
+        case(ID_BUTTON6): {
+            updateEntry(L"6");
+            break;
+
         }
-        else if (LOWORD(wParam) == ID_BUTTON7) {
-            entry = entry + L"7";
-            SetWindowText(hwndOutputText, entry.c_str());
+        case(ID_BUTTON7): {
+            updateEntry(L"7");
+            break;
+
         }
-        else if (LOWORD(wParam) == ID_BUTTON8) {
-            entry = entry + L"8";
-            SetWindowText(hwndOutputText, entry.c_str());
+        case(ID_BUTTON8): {
+            updateEntry(L"8");
+            break;
+
         }
-        else if (LOWORD(wParam) == ID_BUTTON9) {
-            entry = entry + L"9";
-            SetWindowText(hwndOutputText, entry.c_str());
+        case(ID_BUTTON9): {
+            updateEntry(L"9");
+            break;
+
         }
-        else if (LOWORD(wParam) == ID_BUTTON10) {
-            entry = entry + L"0";
-            SetWindowText(hwndOutputText, entry.c_str());
+        case(ID_BUTTON10): {
+            updateEntry(L"0");
+            break;
+
         }
-        else if (LOWORD(wParam) == ID_BUTTON_DEC) {
-            entry = entry + L".";
-            SetWindowText(hwndOutputText, entry.c_str());
+        case(ID_BUTTON_DEC): {
+            updateEntry(L".");
+            break;
+
         }
-        else if (LOWORD(wParam) == ID_BUTTON_PLUS) {
+        case(ID_BUTTON_PLUS): {
+            if (state == 1)
+            {
+                state = 0;
+            }
             entry = entry + L"+";
-            SetWindowText(hwndOutputText, entry.c_str());
+            break;
+
         }
-        else if (LOWORD(wParam) == ID_BUTTON_MIN) {
+        case(ID_BUTTON_MIN): {
+            if (state == 1)
+            {
+                state = 0;
+            }
             entry = entry + L"-";
-            SetWindowText(hwndOutputText, entry.c_str());
+            break;
+
         }
-        else if (LOWORD(wParam) == ID_BUTTON_MULT) {
+        case(ID_BUTTON_MULT): {
+            if (state == 1)
+            {
+                state = 0;
+            }
             entry = entry + L"*";
-            SetWindowText(hwndOutputText, entry.c_str());
+            break;
+
         }
-        else if (LOWORD(wParam) == ID_BUTTON_DIV) {
+        case(ID_BUTTON_DIV): {
+            if (state == 1)
+            {
+                state = 0;
+            }
             entry = entry + L"/";
-            SetWindowText(hwndOutputText, entry.c_str());
+            break;
+
         }
-        else if (LOWORD(wParam) == ID_BUTTON_PER) {
-            entry = computer.calculatePercentage(entry);
-            SetWindowText(hwndOutputText, entry.c_str());
-        }
-        else if (LOWORD(wParam) == ID_BUTTON_C) {
+        case(ID_BUTTON_C): {
+            if (state == 1)
+            {
+                state = 0;
+            }
             entry = L"";
-            traceHistory = L"";
-            SetWindowText(hwndOutputText, entry.c_str());
-            SetWindowText(hwndTextTrace, traceHistory.c_str());
+            computer.clearTrace();
+            SetWindowText(hwndTextTrace, computer.getTraceHistory().c_str());
+            break;
+
         }
-        else if (LOWORD(wParam) == ID_BUTTON_CE) {
+        case(ID_BUTTON_CE): {
+            if (state == 1)
+            {
+                state = 0;
+            }
             entry = L"";
             SetWindowText(hwndOutputText, entry.c_str());
+            break;
         }
-        else if (LOWORD(wParam) == ID_BUTTON_EQ) {
+        case(ID_BUTTON_EQ): {
             // computer entry
             // entry = L"";
             entry = computer.calculate(entry);
-            SetWindowText(hwndOutputText, entry.c_str());
+            SetWindowText(hwndTextTrace, computer.getTraceHistory().c_str());
+            state = 1;
+            break;
         }
-        else if (LOWORD(wParam) == ID_BUTTON_TRACE_ON) {
+        case(ID_BUTTON_PER): {
+            entry = computer.calculatePercentage(entry);
+            SetWindowText(hwndTextTrace, computer.getTraceHistory().c_str());
+            state = 1;
+            break;
+
+        }
+        case(ID_BUTTON_TRACE_ON): {
             EnableWindow(hwndButtonTraceOff, TRUE);
             EnableWindow(hwndButtonTraceOn, FALSE);
-            trace_on = TRUE;
+            // trace_on = TRUE;
             computer.activateTrace();
+            break;
+
         }
-        else if (LOWORD(wParam) == ID_BUTTON_TRACE_OFF) {
+        case(ID_BUTTON_TRACE_OFF): {
             EnableWindow(hwndButtonTraceOff, FALSE);
             EnableWindow(hwndButtonTraceOn, TRUE);
-            trace_on = FALSE;
+            // trace_on = FALSE;
             computer.deactivateTrace();
+            break;
         }
+        default:
+            break;
+        }
+        SetWindowText(hwndOutputText, entry.c_str());
         break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
 
     return 0;
+}
+
+
+void updateEntry(wstring str) {
+    if (state == 1)
+    {
+        entry = L"";
+        state = 0;
+    }
+    entry = entry + str;
 }
