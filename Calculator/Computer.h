@@ -16,6 +16,7 @@ private:
 
 public:
     wstring calculate(wstring entry);
+    wstring calculatePercentage(wstring entry);
     wstring getTraceHistory();
     void activateTrace();
     void deactivateTrace();

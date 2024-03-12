@@ -669,9 +669,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         PostQuitMessage(0);
         break;
     case WM_COMMAND:
-        TCHAR debugStr[100];
-        wsprintf(debugStr, TEXT("Button_id: %i\n"), LOWORD(wParam));
-        OutputDebugString(debugStr);
+        // TCHAR debugStr[100];
+        // wsprintf(debugStr, TEXT("Button_id: %i\n"), LOWORD(wParam));
+        // OutputDebugString(debugStr);
         if (LOWORD(wParam) == ID_BUTTON1) {
             // MessageBox(hWnd, TEXT("1 Button clicked!"), TEXT("Message"), MB_OK);
             entry = entry + L"1";
@@ -734,7 +734,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             SetWindowText(hwndOutputText, entry.c_str());
         }
         else if (LOWORD(wParam) == ID_BUTTON_PER) {
-            entry = entry + L"%";
+            entry = computer.calculatePercentage(entry);
             SetWindowText(hwndOutputText, entry.c_str());
         }
         else if (LOWORD(wParam) == ID_BUTTON_C) {
