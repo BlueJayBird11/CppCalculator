@@ -1,10 +1,7 @@
 // compile with: /D_UNICODE /DUNICODE /DWIN32 /D_WINDOWS /c
 
 #include <windows.h>
-#include <stdlib.h>
-#include <string.h>
 #include <tchar.h>
-#include <iostream>
 #include <string>
 #include "Computer.h"
 #include <CommCtrl.h>
@@ -43,11 +40,7 @@ static TCHAR szWindowClass[] = _T("DesktopApp");
 // The string that appears in the application's title bar.
 static TCHAR szTitle[] = _T("Calculator");
 
-// HBRUSH hBackgroundBrush = NULL;
-bool trace_on = false;
-
 std::wstring entry = L"";
-std::wstring traceHistory = L"";
 
 Computer computer;
 
@@ -165,7 +158,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     PAINTSTRUCT ps;
     HDC hdc;
-    TCHAR greeting[] = _T("Hello, Jay!");
     static HWND hwndButton1 = NULL;
     static HWND hwndButton2 = NULL;
     static HWND hwndButton3 = NULL;
@@ -176,6 +168,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static HWND hwndButton8 = NULL;
     static HWND hwndButton9 = NULL;
     static HWND hwndButton10 = NULL;
+
     static HWND hwndButtonDec = NULL;
     static HWND hwndButtonC = NULL;
     static HWND hwndButtonCE = NULL;
@@ -185,13 +178,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static HWND hwndButtonDiv = NULL;
     static HWND hwndButtonEq = NULL;
     static HWND hwndButtonPer = NULL;
+
     static HWND hwndTab = NULL;
+
     static HWND hwndButtonTraceOn = NULL;
     static HWND hwndButtonTraceOff = NULL;
+
     static HWND hwndTextTrace = NULL;
-
-    // HBRUSH hbrBkgnd = NULL; // Handle to the brush
-
     static HWND hwndOutputText = NULL;
     // TCITEM tie;
     TCITEM tie = { 0 };
@@ -239,7 +232,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         hwndOutputText = CreateWindow(
             TEXT("STATIC"),  // Predefined class; STATIC for text
             TEXT(""),  // Text to be displayed
-            WS_VISIBLE | WS_CHILD | SS_RIGHT,  // Style: Visible, a child window, left-aligned text
+            WS_VISIBLE | WS_CHILD | SS_RIGHT,  // Style: Visible, a child window, right-aligned text
             start_x,         // x position
             start_y - start_y / 2 - button_size / 2,         // y position
             start_x + 5 * spacing - button_size / 2 + start_x / 2,        // Width of the text block
@@ -251,8 +244,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         // trace text
         hwndTextTrace = CreateWindow(
-            TEXT("EDIT"),  // Predefined class; STATIC for text
-            TEXT(""),  // Text to be displayed
+            TEXT("EDIT"), 
+            TEXT(""),  
             WS_VISIBLE | WS_CHILD | WS_VSCROLL | ES_LEFT | ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY,
             10,         // x position
             30,         // y position
@@ -563,10 +556,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         EnableWindow(hwndButtonTraceOff, FALSE);
 
-
-        // ShowWindow(hwndButton1, SW_HIDE);
-        // ShowWindow(hwndButton2, SW_SHOW);
-
         break;
 
     case WM_CTLCOLORSTATIC:
@@ -662,12 +651,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
             }
         // }
-        break;
-
-    case WM_PAINT:
-        hdc = BeginPaint(hWnd, &ps);
-        TextOut(hdc, 10, 10, greeting, _tcslen(greeting));
-        EndPaint(hWnd, &ps);
         break;
     case WM_DESTROY:
         PostQuitMessage(0);
@@ -803,8 +786,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             break;
         }
         case(ID_BUTTON_EQ): {
-            // computer entry
-            // entry = L"";
             try
             {
                 entry = computer.calculate(entry);
@@ -833,7 +814,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case(ID_BUTTON_TRACE_ON): {
             EnableWindow(hwndButtonTraceOff, TRUE);
             EnableWindow(hwndButtonTraceOn, FALSE);
-            // trace_on = TRUE;
             computer.activateTrace();
             break;
 
@@ -841,7 +821,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case(ID_BUTTON_TRACE_OFF): {
             EnableWindow(hwndButtonTraceOff, FALSE);
             EnableWindow(hwndButtonTraceOn, TRUE);
-            // trace_on = FALSE;
             computer.deactivateTrace();
             break;
         }

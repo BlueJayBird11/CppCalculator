@@ -2,9 +2,7 @@
 #include "Computer.h"
 #include <iostream>
 #include <string>
-#include <tchar.h>
 #include <vector>
-#include <windows.h>
 #include <cmath>
 
 using namespace std;
