@@ -281,6 +281,13 @@ wstring Computer::calculate(wstring entry)
 
     addToTrace(L"\r\nRemaining item: " + items[0] + L"\r\n\r\n");
 
+    double_t tempNum = stod(items[0]);
+
+    if (floor(tempNum) == tempNum)
+    {
+        return to_wstring((int)tempNum);
+    }
+
     answer = items[0];
 
     return answer;
@@ -428,6 +435,13 @@ wstring Computer::calculatePercentage(wstring entry)
     }
 
     addToTrace(L"\r\nRemaining item: " + items[0] + L"\r\n\r\n");
+
+    double_t tempNum = stod(items[0]);
+
+    if (floor(tempNum) == tempNum)
+    {
+        return to_wstring((int)tempNum);
+    }
 
     answer = items[0];
 

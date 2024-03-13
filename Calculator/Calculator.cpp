@@ -805,15 +805,27 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case(ID_BUTTON_EQ): {
             // computer entry
             // entry = L"";
-            entry = computer.calculate(entry);
-            // if (entry.find)
+            try
+            {
+                entry = computer.calculate(entry);
+            }
+            catch (const std::exception&)
+            {
+                entry = L"SYNTAX ERROR";
+            }
             SetWindowText(hwndTextTrace, computer.getTraceHistory().c_str());
             state = 1;
             break;
         }
         case(ID_BUTTON_PER): {
-            entry = computer.calculatePercentage(entry);
-            SetWindowText(hwndTextTrace, computer.getTraceHistory().c_str());
+            try
+            {
+                entry = computer.calculatePercentage(entry);
+            }
+            catch (const std::exception&)
+            {
+                entry = L"SYNTAX ERROR";
+            }   SetWindowText(hwndTextTrace, computer.getTraceHistory().c_str());
             state = 1;
             break;
 
