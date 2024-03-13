@@ -5,6 +5,7 @@
 #include <tchar.h>
 #include <vector>
 #include <windows.h>
+#include <cmath>
 
 using namespace std;
 
@@ -15,7 +16,6 @@ bool isANumber(char charater)
     {
         if (nums[i] == charater)
         {
-            // wcout << nums[i] << std::endl;
             return true;
         }
     }
@@ -29,7 +29,6 @@ bool isAnOperator(char charater)
     {
         if (operators[i] == charater)
         {
-            // wcout << operators[i] << std::endl;
             return true;
         }
     }
@@ -53,8 +52,17 @@ bool isValidChar(char charater)
     return false;
 }
 
-int stringToVector(wstring entry, vector<wstring>& items)
+void Computer::addToTrace(wstring entry)
 {
+    if (doTrace)
+    {
+        traceHistory += entry;
+    }
+}
+
+int Computer::stringToVector(wstring entry, vector<wstring>& items)
+{
+    addToTrace(L"Entry -> Vector\r\n");
     wstring tempNum = L"";
     for (int i = 0; i < entry.length(); i++)
     {
@@ -62,6 +70,7 @@ int stringToVector(wstring entry, vector<wstring>& items)
         char current = entry[i];
         if (!isValidChar(current))
         {
+            addToTrace(L"\r\nSYNTAX ERROR - invalid charater \r\n\r\n");
             return 1;
         }
         else if (current == '.')
@@ -76,6 +85,7 @@ int stringToVector(wstring entry, vector<wstring>& items)
             }
             else
             {
+                addToTrace(L"\r\nSYNTAX ERROR - multiple decimals in number \r\n\r\n");
                 return 1;
             }
         }
@@ -85,10 +95,10 @@ int stringToVector(wstring entry, vector<wstring>& items)
             tempNum = tempNum + temp;
             if (isAnOperator(entry[i + 1]) or i == entry.length() - 1)
             {
+                addToTrace(L"NUMBER(" + tempNum + L"), ");
                 items.push_back(tempNum);
                 tempNum = L"";
             }
-            // wcout << current << L" is a number" << endl;
         }
         else
         {
@@ -96,6 +106,12 @@ int stringToVector(wstring entry, vector<wstring>& items)
             // if the first char is an operator that is not '-'
             if (i == 0 and current != '-')
             {
+                addToTrace(L"\r\nSYNTAX ERROR - first charater is operator other than '-' \r\n\r\n");
+                return 1;
+            }
+            else if (i == 0 and current == '-' and entry.length() == 1)
+            {
+                addToTrace(L"\r\nSYNTAX ERROR - first charater is operator other than '-' but nothing follows \r\n\r\n");
                 return 1;
             }
             // if the first char is '-'
@@ -103,46 +119,40 @@ int stringToVector(wstring entry, vector<wstring>& items)
             {
                 items.push_back(L"0");
                 items.push_back(L"-");
+                addToTrace(L"NUMBER(0), OPERATOR(-)");
             }
             // if the last charater is an operator
             else if (i == entry.length() - 1 and current != '%')
             {
+                addToTrace(L"\r\nSYNTAX ERROR - last charater is operator \r\n\r\n");
                 return 1;
             }
             // if the next charater is '-' and the next charater is an operator
             else if (entry[i + 1] == '-' and isAnOperator(entry[i + 2]))
             {
-                wcout << "ERROR: 1" << endl;
+                addToTrace(L"\r\nSYNTAX ERROR - charater following - is operator \r\n\r\n");
                 return 1;
             }
             // else if the next charater is not '-' and is an operator
             else if (isAnOperator(entry[i + 1]) and entry[i + 1] != '-')
             {
-                wcout << "ERROR: 2" << endl;
+                addToTrace(L"\r\nSYNTAX ERROR - charater after operator is operator other than '-' \r\n\r\n");
                 return 1;
             }
             else
             {
                 wstring temp(1, static_cast<wchar_t>(current));
+                addToTrace(L"OPERATOR(" + temp + L"), ");
                 items.push_back(temp);
             }
-            // wcout << current << L" is not a number" << endl;
         }
     }
     return 0;
 }
 
-void Computer::addToTrace(wstring entry)
-{
-    if (doTrace)
-    {
-        traceHistory += entry;
-    }
-}
-
 wstring Computer::calculate(wstring entry)
 {
-    addToTrace(L"Entry: " + entry + L"\r\r\n");
+    addToTrace(L"Entry: " + entry + L"\r\n");
     wstring answer = L"0";
 
     if (entry.length() == 0)
@@ -187,7 +197,7 @@ wstring Computer::calculate(wstring entry)
                 addToTrace(L"--next number is negative\r\n-");
             }
             addToTrace(number1 + L"*" + number2 + L"=");
-            double tempAns = stod(number1) * stod(number2);
+            double_t tempAns = stod(number1) * stod(number2);
             wstring tempStrAxs = to_wstring(tempAns);
             addToTrace(tempStrAxs);
             items[i - 1] = tempStrAxs;
@@ -212,7 +222,7 @@ wstring Computer::calculate(wstring entry)
                 return L"DIV BY 0 ERROR";
             }
             addToTrace(number1 + L"/" + number2 + L"=");
-            double tempAns = stod(number1) / stod(number2);
+            double_t tempAns = stod(number1) / stod(number2);
             wstring tempStrAxs = to_wstring(tempAns);
             addToTrace(tempStrAxs);
             items[i - 1] = tempStrAxs;
@@ -240,7 +250,7 @@ wstring Computer::calculate(wstring entry)
                 addToTrace(L"--next number is negative\r\n-");
             }
             addToTrace(number1 + L"+" + number2 + L"=");
-            double tempAns = stod(number1) + stod(number2);
+            double_t tempAns = stod(number1) + stod(number2);
             wstring tempStrAxs = to_wstring(tempAns);
             addToTrace(tempStrAxs);
             items[i - 1] = tempStrAxs;
@@ -260,7 +270,7 @@ wstring Computer::calculate(wstring entry)
                 addToTrace(L"--next number is negative\r\n-");
             }
             addToTrace(number1 + L"-" + number2 + L"=");
-            double tempAns = stod(number1) - stod(number2);
+            double_t tempAns = stod(number1) - stod(number2);
             wstring tempStrAxs = to_wstring(tempAns);
             addToTrace(tempStrAxs);
             items[i - 1] = tempStrAxs;
@@ -278,8 +288,13 @@ wstring Computer::calculate(wstring entry)
 
 wstring Computer::calculatePercentage(wstring entry)
 {
-    wcout << "Entry: " << entry << endl;
-    wstring answer = L"end";
+    addToTrace(L"Entry (percentage mode): " + entry + L"\r\n");
+    wstring answer = L"0";
+
+    if (entry.length() == 0)
+    {
+        return answer;
+    }
 
     vector<wstring> items;
 
@@ -291,22 +306,23 @@ wstring Computer::calculatePercentage(wstring entry)
         return L"SYNTAX ERROR";
     }
 
-    wcout << endl << "Items:" << endl;
+    addToTrace(L"Items:");
 
     for (int i = 0; i < items.size(); i++)
     {
-        wcout << items[i] << ", ";
+        addToTrace(items[i] + L", ");
     }
 
     // CALCULATE ANSWER
     // * and /
-    wcout << endl << "CALCULATE:" << endl;
+    addToTrace(L"\r\nCALCULATE (* and /):\r\n");
     for (int i = 0; i < items.size(); i++)
     {
         wstring current = items[i];
-        wcout << current << ", ";
+        addToTrace(current + L", ");
         if (current == L"*")
         {
+            addToTrace(L"\r\n-'*' found\r\n");
             int t = i + 2;
             wstring number1 = items[i - 1];
             wstring number2 = items[i + 1];
@@ -314,18 +330,22 @@ wstring Computer::calculatePercentage(wstring entry)
             {
                 number2 = number2 + items[i + 2];
                 t++;
+                addToTrace(L"--next number is negative\r\n-");
             }
-            double double1 = stod(number1);
-            double double2 = stod(number2) / 100 * double1;
+            double_t double_t1 = stod(number1);
+            double_t double_t2 = stod(number2) / 100 * double_t1;
 
-            double tempAns = double1 * double2;
-            wcout << endl << tempAns << endl;
-            items[i - 1] = to_wstring(tempAns);
+            addToTrace(number1 + L"*(" + number2 + L"/100*" + number1 + L")=");
+            double_t tempAns = double_t1 * double_t2;
+            wstring tempStrAxs = to_wstring(tempAns);
+            addToTrace(tempStrAxs);
+            items[i - 1] = tempStrAxs;
             items.erase(items.begin() + i, items.begin() + t);
             i--;
         }
-        if (current == L"/")
+        else if (current == L"/")
         {
+            addToTrace(L"\r\n-'/' found\r\n");
             int t = i + 2;
             wstring number1 = items[i - 1];
             wstring number2 = items[i + 1];
@@ -333,31 +353,35 @@ wstring Computer::calculatePercentage(wstring entry)
             {
                 number2 = number2 + items[i + 2];
                 t++;
+                addToTrace(L"--next number is negative\r\n-");
             }
             if (stod(number2) == 0.0)
             {
+                addToTrace(L"--next number is 0: ERROR\r\n-");
                 return L"DIV BY 0 ERROR";
             }
-            double double1 = stod(number1);
-            double double2 = stod(number2) / 100 * double1;
+            double_t double_t1 = stod(number1);
+            double_t double_t2 = stod(number2) / 100 * double_t1;
 
-            double tempAns = double1 / double2;
-            wcout << endl << tempAns << endl;
-            items[i - 1] = to_wstring(tempAns);
+            addToTrace(number1 + L"/(" + number2 + L"/100*" + number1 + L")=");
+            double_t tempAns = double_t1 / double_t2;
+            wstring tempStrAxs = to_wstring(tempAns);
+            addToTrace(tempStrAxs);
+            items[i - 1] = tempStrAxs;
             items.erase(items.begin() + i, items.begin() + t);
             i--;
         }
     }
 
-    // wcout << endl << "*/:" << endl;
-
     // + and -
+    addToTrace(L"\r\nCALCULATE (+ and -):\r\n");
     for (int i = 0; i < items.size(); i++)
     {
         wstring current = items[i];
-        wcout << current << ", ";
+        addToTrace(current + L", ");
         if (current == L"+")
         {
+            addToTrace(L"\r\n-'+' found\r\n");
             int t = i + 2;
             wstring number1 = items[i - 1];
             wstring number2 = items[i + 1];
@@ -365,19 +389,22 @@ wstring Computer::calculatePercentage(wstring entry)
             {
                 number2 = number2 + items[i + 2];
                 t++;
+                addToTrace(L"--next number is negative\r\n-");
             }
+            double_t double_t1 = stod(number1);
+            double_t double_t2 = stod(number2) / 100 * double_t1;
 
-            double double1 = stod(number1);
-            double double2 = stod(number2) / 100 * double1;
-
-            double tempAns = double1 + double2;
-            wcout << endl << tempAns << endl;
-            items[i - 1] = to_wstring(tempAns);
+            addToTrace(number1 + L"+(" + number2 + L"/100*" + number1 + L")=");
+            double_t tempAns = double_t1 + double_t2;
+            wstring tempStrAxs = to_wstring(tempAns);
+            addToTrace(tempStrAxs);
+            items[i - 1] = tempStrAxs;
             items.erase(items.begin() + i, items.begin() + t);
             i--;
         }
-        if (current == L"-")
+        else if (current == L"-")
         {
+            addToTrace(L"\r\n-'-' found\r\n");
             int t = i + 2;
             wstring number1 = items[i - 1];
             wstring number2 = items[i + 1];
@@ -385,27 +412,22 @@ wstring Computer::calculatePercentage(wstring entry)
             {
                 number2 = number2 + items[i + 2];
                 t++;
+                addToTrace(L"--next number is negative\r\n-");
             }
-            double double1 = stod(number1);
-            double double2 = stod(number2) / 100 * double1;
+            double_t double_t1 = stod(number1);
+            double_t double_t2 = stod(number2) / 100 * double_t1;
 
-            double tempAns = double1 - double2;
-            wcout << endl << tempAns << endl;
-            items[i - 1] = to_wstring(tempAns);
+            addToTrace(number1 + L"-("+ number2 + L"/100*" + number1 + L")=");
+            double_t tempAns = double_t1 - double_t2;
+            wstring tempStrAxs = to_wstring(tempAns);
+            addToTrace(tempStrAxs);
+            items[i - 1] = tempStrAxs;
             items.erase(items.begin() + i, items.begin() + t);
             i--;
         }
     }
 
-    wcout << endl << "Items:" << endl;
-
-    for (int i = 0; i < items.size(); i++)
-    {
-        wcout << items[i] << ", ";
-    }
-
-    wcout << endl << endl;
-
+    addToTrace(L"\r\nRemaining item: " + items[0] + L"\r\n\r\n");
 
     answer = items[0];
 

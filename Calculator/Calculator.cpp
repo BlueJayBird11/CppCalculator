@@ -806,6 +806,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             // computer entry
             // entry = L"";
             entry = computer.calculate(entry);
+            // if (entry.find)
             SetWindowText(hwndTextTrace, computer.getTraceHistory().c_str());
             state = 1;
             break;
@@ -843,7 +844,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     return 0;
 }
-
 
 void updateEntry(wstring str) {
     if (state == 1)

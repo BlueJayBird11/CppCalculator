@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -13,6 +14,7 @@ class Computer
 private:
     wstring traceHistory;
     bool doTrace = false;
+    int stringToVector(wstring, vector<wstring>&);
 
 public:
     void addToTrace(wstring str);
