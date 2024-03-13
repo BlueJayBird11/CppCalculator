@@ -170,7 +170,7 @@ wstring Computer::calculate(wstring entry)
         return L"SYNTAX ERROR";
     }
 
-    addToTrace(L"Items:");
+    addToTrace(L"\r\nItems:");
 
     for (int i = 0; i < items.size(); i++)
     {
@@ -198,9 +198,9 @@ wstring Computer::calculate(wstring entry)
             }
             addToTrace(number1 + L"*" + number2 + L"=");
             double_t tempAns = stod(number1) * stod(number2);
-            wstring tempStrAxs = to_wstring(tempAns);
-            addToTrace(tempStrAxs);
-            items[i - 1] = tempStrAxs;
+            wstring tempStrAns = to_wstring(tempAns);
+            addToTrace(tempStrAns + L"\r\nItems: ");
+            items[i - 1] = tempStrAns;
             items.erase(items.begin() + i, items.begin() + t);
             i--;
         }
@@ -223,9 +223,9 @@ wstring Computer::calculate(wstring entry)
             }
             addToTrace(number1 + L"/" + number2 + L"=");
             double_t tempAns = stod(number1) / stod(number2);
-            wstring tempStrAxs = to_wstring(tempAns);
-            addToTrace(tempStrAxs);
-            items[i - 1] = tempStrAxs;
+            wstring tempStrAns = to_wstring(tempAns);
+            addToTrace(tempStrAns + L"\r\nItems: ");
+            items[i - 1] = tempStrAns;
             items.erase(items.begin() + i, items.begin() + t);
             i--;
         }
@@ -251,9 +251,9 @@ wstring Computer::calculate(wstring entry)
             }
             addToTrace(number1 + L"+" + number2 + L"=");
             double_t tempAns = stod(number1) + stod(number2);
-            wstring tempStrAxs = to_wstring(tempAns);
-            addToTrace(tempStrAxs);
-            items[i - 1] = tempStrAxs;
+            wstring tempStrAns = to_wstring(tempAns);
+            addToTrace(tempStrAns + L"\r\nItems: ");
+            items[i - 1] = tempStrAns;
             items.erase(items.begin() + i, items.begin() + t);
             i--;
         }
@@ -271,9 +271,9 @@ wstring Computer::calculate(wstring entry)
             }
             addToTrace(number1 + L"-" + number2 + L"=");
             double_t tempAns = stod(number1) - stod(number2);
-            wstring tempStrAxs = to_wstring(tempAns);
-            addToTrace(tempStrAxs);
-            items[i - 1] = tempStrAxs;
+            wstring tempStrAns = to_wstring(tempAns);
+            addToTrace(tempStrAns + L"\r\nItems: ");
+            items[i - 1] = tempStrAns;
             items.erase(items.begin() + i, items.begin() + t);
             i--;
         }
@@ -306,7 +306,7 @@ wstring Computer::calculatePercentage(wstring entry)
         return L"SYNTAX ERROR";
     }
 
-    addToTrace(L"Items:");
+    addToTrace(L"\r\nItems:");
 
     for (int i = 0; i < items.size(); i++)
     {
@@ -337,9 +337,9 @@ wstring Computer::calculatePercentage(wstring entry)
 
             addToTrace(number1 + L"*(" + number2 + L"/100*" + number1 + L")=");
             double_t tempAns = double_t1 * double_t2;
-            wstring tempStrAxs = to_wstring(tempAns);
-            addToTrace(tempStrAxs);
-            items[i - 1] = tempStrAxs;
+            wstring tempStrAns = to_wstring(tempAns);
+            addToTrace(tempStrAns + L"\r\nItems: ");
+            items[i - 1] = tempStrAns;
             items.erase(items.begin() + i, items.begin() + t);
             i--;
         }
@@ -365,9 +365,9 @@ wstring Computer::calculatePercentage(wstring entry)
 
             addToTrace(number1 + L"/(" + number2 + L"/100*" + number1 + L")=");
             double_t tempAns = double_t1 / double_t2;
-            wstring tempStrAxs = to_wstring(tempAns);
-            addToTrace(tempStrAxs);
-            items[i - 1] = tempStrAxs;
+            wstring tempStrAns = to_wstring(tempAns);
+            addToTrace(tempStrAns + L"\r\nItems: ");
+            items[i - 1] = tempStrAns;
             items.erase(items.begin() + i, items.begin() + t);
             i--;
         }
@@ -396,9 +396,9 @@ wstring Computer::calculatePercentage(wstring entry)
 
             addToTrace(number1 + L"+(" + number2 + L"/100*" + number1 + L")=");
             double_t tempAns = double_t1 + double_t2;
-            wstring tempStrAxs = to_wstring(tempAns);
-            addToTrace(tempStrAxs);
-            items[i - 1] = tempStrAxs;
+            wstring tempStrAns = to_wstring(tempAns);
+            addToTrace(tempStrAns + L"\r\nItems: ");
+            items[i - 1] = tempStrAns;
             items.erase(items.begin() + i, items.begin() + t);
             i--;
         }
@@ -419,9 +419,9 @@ wstring Computer::calculatePercentage(wstring entry)
 
             addToTrace(number1 + L"-("+ number2 + L"/100*" + number1 + L")=");
             double_t tempAns = double_t1 - double_t2;
-            wstring tempStrAxs = to_wstring(tempAns);
-            addToTrace(tempStrAxs);
-            items[i - 1] = tempStrAxs;
+            wstring tempStrAns = to_wstring(tempAns);
+            addToTrace(tempStrAns + L"\r\nItems: ");
+            items[i - 1] = tempStrAns;
             items.erase(items.begin() + i, items.begin() + t);
             i--;
         }
