@@ -50,6 +50,26 @@ bool isValidChar(char charater)
     return false;
 }
 
+wstring removeTrailingZeros(wstring str) {
+    // Check if the string contains a decimal point.
+    size_t decimalPos = str.find(L'.');
+    if (decimalPos != std::wstring::npos) {
+        // Erase trailing zeros.
+        size_t nonZeroPos = str.find_last_not_of(L'0');
+
+        if (nonZeroPos > decimalPos) {
+            // Erase trailing zeros but leave the decimal part intact.
+            str.erase(nonZeroPos + 1);
+        }
+        else
+        {
+            // If there are no non-zero digits after the decimal point, remove it as well.
+            str.erase(nonZeroPos);
+        }
+    }
+    return str;
+}
+
 void Computer::addToTrace(wstring entry)
 {
     if (doTrace)
@@ -194,9 +214,20 @@ wstring Computer::calculate(wstring entry)
                 t++;
                 addToTrace(L"--next number is negative\r\n-");
             }
+            wstring tempStrAns;
             addToTrace(number1 + L"*" + number2 + L"=");
-            double_t tempAns = stod(number1) * stod(number2);
-            wstring tempStrAns = to_wstring(tempAns);
+            if (stoll(number1) > 10000000 or stoll(number2) > 10000000)
+            {
+                // addToTrace(L"LOOOOOKKKKK THIS SHOULD WORK\r\n-");
+                long long tempAns = stoll(number1) * stoll(number2);
+                tempStrAns = to_wstring(tempAns);
+            }
+            else
+            {
+                double_t tempAns = stod(number1) * stod(number2);
+                tempStrAns = to_wstring(tempAns);
+            }
+            tempStrAns = removeTrailingZeros(tempStrAns);
             addToTrace(tempStrAns + L"\r\nItems: ");
             items[i - 1] = tempStrAns;
             items.erase(items.begin() + i, items.begin() + t);
@@ -219,9 +250,19 @@ wstring Computer::calculate(wstring entry)
                 addToTrace(L"--next number is 0: ERROR\r\n-");
                 return L"DIV BY 0 ERROR";
             }
+            wstring tempStrAns;
             addToTrace(number1 + L"/" + number2 + L"=");
-            double_t tempAns = stod(number1) / stod(number2);
-            wstring tempStrAns = to_wstring(tempAns);
+            if (stoll(number1) > 10000000 or stoll(number2) > 10000000)
+            {
+                long long tempAns = stoll(number1) / stoll(number2);
+                tempStrAns = to_wstring(tempAns);
+            }
+            else
+            {
+                double_t tempAns = stod(number1) / stod(number2);
+                tempStrAns = to_wstring(tempAns);
+            }
+            tempStrAns = removeTrailingZeros(tempStrAns);
             addToTrace(tempStrAns + L"\r\nItems: ");
             items[i - 1] = tempStrAns;
             items.erase(items.begin() + i, items.begin() + t);
@@ -247,9 +288,19 @@ wstring Computer::calculate(wstring entry)
                 t++;
                 addToTrace(L"--next number is negative\r\n-");
             }
+            wstring tempStrAns;
             addToTrace(number1 + L"+" + number2 + L"=");
-            double_t tempAns = stod(number1) + stod(number2);
-            wstring tempStrAns = to_wstring(tempAns);
+            if (stoll(number1) > 10000000 or stoll(number2) > 10000000)
+            {
+                long long tempAns = stoll(number1) + stoll(number2);
+                tempStrAns = to_wstring(tempAns);
+            }
+            else
+            {
+                double_t tempAns = stod(number1) + stod(number2);
+                tempStrAns = to_wstring(tempAns);
+            }
+            tempStrAns = removeTrailingZeros(tempStrAns);
             addToTrace(tempStrAns + L"\r\nItems: ");
             items[i - 1] = tempStrAns;
             items.erase(items.begin() + i, items.begin() + t);
@@ -267,9 +318,19 @@ wstring Computer::calculate(wstring entry)
                 t++;
                 addToTrace(L"--next number is negative\r\n-");
             }
+            wstring tempStrAns;
             addToTrace(number1 + L"-" + number2 + L"=");
-            double_t tempAns = stod(number1) - stod(number2);
-            wstring tempStrAns = to_wstring(tempAns);
+            if (stoll(number1) > 10000000 or stoll(number2) > 10000000)
+            {
+                long long tempAns = stoll(number1) - stoll(number2);
+                tempStrAns = to_wstring(tempAns);
+            }
+            else
+            {
+                double_t tempAns = stod(number1) - stod(number2);
+                tempStrAns = to_wstring(tempAns);
+            }
+            tempStrAns = removeTrailingZeros(tempStrAns);
             addToTrace(tempStrAns + L"\r\nItems: ");
             items[i - 1] = tempStrAns;
             items.erase(items.begin() + i, items.begin() + t);
@@ -280,11 +341,6 @@ wstring Computer::calculate(wstring entry)
     addToTrace(L"\r\nRemaining item: " + items[0] + L"\r\n\r\n");
 
     double_t tempNum = stod(items[0]);
-
-    if (floor(tempNum) == tempNum)
-    {
-        return to_wstring((long long int)tempNum);
-    }
 
     answer = items[0];
 
@@ -343,6 +399,7 @@ wstring Computer::calculatePercentage(wstring entry)
             addToTrace(number1 + L"*(" + number2 + L"/100*" + number1 + L")=");
             double_t tempAns = double_t1 * double_t2;
             wstring tempStrAns = to_wstring(tempAns);
+            tempStrAns = removeTrailingZeros(tempStrAns);
             addToTrace(tempStrAns + L"\r\nItems: ");
             items[i - 1] = tempStrAns;
             items.erase(items.begin() + i, items.begin() + t);
@@ -371,6 +428,7 @@ wstring Computer::calculatePercentage(wstring entry)
             addToTrace(number1 + L"/(" + number2 + L"/100*" + number1 + L")=");
             double_t tempAns = double_t1 / double_t2;
             wstring tempStrAns = to_wstring(tempAns);
+            tempStrAns = removeTrailingZeros(tempStrAns);
             addToTrace(tempStrAns + L"\r\nItems: ");
             items[i - 1] = tempStrAns;
             items.erase(items.begin() + i, items.begin() + t);
@@ -402,6 +460,7 @@ wstring Computer::calculatePercentage(wstring entry)
             addToTrace(number1 + L"+(" + number2 + L"/100*" + number1 + L")=");
             double_t tempAns = double_t1 + double_t2;
             wstring tempStrAns = to_wstring(tempAns);
+            tempStrAns = removeTrailingZeros(tempStrAns);
             addToTrace(tempStrAns + L"\r\nItems: ");
             items[i - 1] = tempStrAns;
             items.erase(items.begin() + i, items.begin() + t);
@@ -425,6 +484,7 @@ wstring Computer::calculatePercentage(wstring entry)
             addToTrace(number1 + L"-("+ number2 + L"/100*" + number1 + L")=");
             double_t tempAns = double_t1 - double_t2;
             wstring tempStrAns = to_wstring(tempAns);
+            tempStrAns = removeTrailingZeros(tempStrAns);
             addToTrace(tempStrAns + L"\r\nItems: ");
             items[i - 1] = tempStrAns;
             items.erase(items.begin() + i, items.begin() + t);
@@ -434,16 +494,7 @@ wstring Computer::calculatePercentage(wstring entry)
 
     addToTrace(L"\r\nRemaining item: " + items[0] + L"\r\n\r\n");
 
-    double_t tempNum = stod(items[0]);
-
-    if (floor(tempNum) == tempNum)
-    {
-        return to_wstring((long long int)tempNum);
-    }
-
-    answer = tempNum;
-
-    return answer;
+    return items[0];
 }
 
 wstring Computer::getTraceHistory()
