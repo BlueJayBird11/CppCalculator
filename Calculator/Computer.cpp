@@ -283,7 +283,7 @@ wstring Computer::calculate(wstring entry)
 
     if (floor(tempNum) == tempNum)
     {
-        return to_wstring((int)tempNum);
+        return to_wstring((long long int)tempNum);
     }
 
     answer = items[0];
@@ -438,10 +438,10 @@ wstring Computer::calculatePercentage(wstring entry)
 
     if (floor(tempNum) == tempNum)
     {
-        return to_wstring((int)tempNum);
+        return to_wstring((long long int)tempNum);
     }
 
-    answer = items[0];
+    answer = tempNum;
 
     return answer;
 }

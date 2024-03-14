@@ -789,6 +789,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             try
             {
                 entry = computer.calculate(entry);
+                TCHAR debugStr[100];
+                wsprintf(debugStr, TEXT("Here: %s\n"), entry.c_str());
+                OutputDebugString(debugStr);
             }
             catch (const std::exception&)
             {
