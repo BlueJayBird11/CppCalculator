@@ -54,7 +54,7 @@ wstring removeTrailingZeros(wstring str) {
     // Check if the string contains a decimal point.
     size_t decimalPos = str.find(L'.');
     if (decimalPos != std::wstring::npos) {
-        // Erase trailing zeros.
+        // Find last none 0 after decimal.
         size_t nonZeroPos = str.find_last_not_of(L'0');
 
         if (nonZeroPos > decimalPos) {

@@ -47,6 +47,7 @@ Computer computer;
 int state = 0;
 
 void updateEntry(wstring);
+void checkEntryError(wstring);
 
 // Stored instance handle for use in Win32 API calls such as FindResource
 HINSTANCE hInst;
@@ -730,38 +731,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         }
         case(ID_BUTTON_PLUS): {
-            if (state == 1)
-            {
-                state = 0;
-            }
-            entry = entry + L"+";
+            checkEntryError(L"+");
             break;
 
         }
         case(ID_BUTTON_MIN): {
-            if (state == 1)
-            {
-                state = 0;
-            }
-            entry = entry + L"-";
+            checkEntryError(L"-");
             break;
 
         }
         case(ID_BUTTON_MULT): {
-            if (state == 1)
-            {
-                state = 0;
-            }
-            entry = entry + L"*";
+            checkEntryError(L"*");
             break;
 
         }
         case(ID_BUTTON_DIV): {
-            if (state == 1)
-            {
-                state = 0;
-            }
-            entry = entry + L"/";
+            checkEntryError(L"/");
             break;
 
         }
@@ -789,9 +774,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             try
             {
                 entry = computer.calculate(entry);
-                TCHAR debugStr[100];
-                wsprintf(debugStr, TEXT("Here: %s\n"), entry.c_str());
-                OutputDebugString(debugStr);
+                //TCHAR debugStr[100];
+                //wsprintf(debugStr, TEXT("Here: %s\n"), entry.c_str());
+                //OutputDebugString(debugStr);
             }
             catch (const std::exception&)
             {
@@ -839,11 +824,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
+// called when
 void updateEntry(wstring str) {
-    if (state == 1)
+    if (state == 1 or (entry == L"0" and str != L"."))
     {
         entry = L"";
         state = 0;
     }
     entry = entry + str;
+}
+
+void checkEntryError(wstring str) {
+    if (entry != L"SYNTAX ERROR" and entry != L"DIV BY 0 ERROR")
+    {
+        entry = entry + str;
+        if (state == 1)
+        {
+            state = 0;
+        }
+    }
+    else if (str == L"-")
+    {
+        state = 0;
+        entry = L"-";
+    }
 }
