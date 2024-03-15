@@ -1,2 +1,17 @@
 # CppCalculator
  
+## Preface
+This program was made for an interview I had with the company VS Merlot.
+
+It uses standard C++ (not Managed C++) with the default Visual Studio compiler and usees user interfaces that are bundled with MSVC: 
+
+https://learn.microsoft.com/en-us/cpp/windows/walkthrough-creating-windows-desktop-applications-cpp?view=msvc-170
+
+## Files
+The main file is Calculator.cpp. This is where the user interface is built. The other two important files are Computer.h and Computer.cpp. 
+
+### Calculator.cpp
+As said before, Calculator.cpp is where the interface is built and shown to the user. This includes the buttons, static and edit texts, and the tabs that the user can switch inbetween. There is also some logic here that helps the user with inputs.
+
+### Computer.h and Computer.cpp
+The computer files can be considered the "brains" of the program. They are where the entry is actually calculated. This was done as a header and accomaning C++ file so that it could be imported into the 
