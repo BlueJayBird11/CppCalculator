@@ -15,6 +15,11 @@ private:
     wstring traceHistory;
     bool doTrace = false;
     int stringToVector(wstring, vector<wstring>&);
+    bool isANumber(char charater);
+    bool isAnOperator(char charater);
+    bool isValidChar(char charater);
+    wstring removeTrailingZeros(wstring str);
+    bool containsDecimal(wstring number);
 
 public:
     void addToTrace(wstring str);

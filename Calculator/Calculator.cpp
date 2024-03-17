@@ -17,7 +17,7 @@
 #define ID_BUTTON7 7
 #define ID_BUTTON8 8
 #define ID_BUTTON9 9
-#define ID_BUTTON10 10
+#define ID_BUTTON0 10
 #define ID_BUTTON_DEC 11
 #define ID_BUTTON_C 12
 #define ID_BUTTON_CE 13
@@ -209,6 +209,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     // NMHDR* pNmhdr = (NMHDR*)lParam;
     NMHDR* pNmhdr = reinterpret_cast<NMHDR*>(lParam);
+    //TCHAR debugStr[100];
+    //wsprintf(debugStr, TEXT("Test if loop\n"));
+    //OutputDebugString(debugStr);
 
     int iPage;
 
@@ -395,7 +398,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             button_size + spacing,        // Button width
             button_size,        // Button height
             hWnd,     // Parent window
-            (HMENU)ID_BUTTON10,       // No menu.
+            (HMENU)ID_BUTTON0,       // No menu.
             (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
             NULL);      // Pointer not needed.
 
@@ -720,7 +723,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             break;
 
         }
-        case(ID_BUTTON10): {
+        case(ID_BUTTON0): {
             updateEntry(L"0");
             break;
 
@@ -824,7 +827,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
-// called when
+// called when a number is pressed
+//  if the state of the calculator is 1 (happens after "=" or "%" is pressed)
+//  then clear the entry and start fresh
 void updateEntry(wstring str) {
     if (state == 1 or (entry == L"0" and str != L"."))
     {
@@ -834,8 +839,9 @@ void updateEntry(wstring str) {
     entry = entry + str;
 }
 
+// At some point it might be worth making a state for if an error happens
 void checkEntryError(wstring str) {
-    if (entry != L"SYNTAX ERROR" and entry != L"DIV BY 0 ERROR")
+    if (entry != L"SYNTAX ERROR" and entry != L"DIV BY 0 ERROR" and entry != L"OVERFLOW ERROR" and entry != L"UNDERFLOW ERROR")
     {
         entry = entry + str;
         if (state == 1)
