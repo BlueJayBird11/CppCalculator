@@ -436,6 +436,7 @@ wstring Computer::calculatePercentage(wstring entry)
 
     if (entry.length() == 0)
     {
+        addToTrace(L"Entry's length is 0, return L\"0\"");
         return answer;
     }
 
@@ -446,6 +447,7 @@ wstring Computer::calculatePercentage(wstring entry)
 
     if (result == 1)
     {
+        addToTrace(L"stringToVector function returned 1, return L\"SYNTAX ERROR\"");
         return L"SYNTAX ERROR";
     }
 
@@ -478,6 +480,7 @@ wstring Computer::calculatePercentage(wstring entry)
             double_t double_t1 = stod(number1);
             double_t double_t2 = stod(number2) / 100 * double_t1;
 
+            addToTrace(L"---Calculate: " + number1 + L"*(" + number2 + L"/100*" + number1 + L")\r\n");
             double_t tempAns = double_t1 * double_t2;
             wstring tempStrAns = to_wstring(tempAns);
             tempStrAns = removeTrailingZeros(tempStrAns);
@@ -511,6 +514,7 @@ wstring Computer::calculatePercentage(wstring entry)
             double_t double_t1 = stod(number1);
             double_t double_t2 = stod(number2) / 100 * double_t1;
 
+            addToTrace(L"---Calculate: " + number1 + L"/(" + number2 + L"/100*" + number1 + L")\r\n");
             double_t tempAns = double_t1 / double_t2;
             wstring tempStrAns = to_wstring(tempAns);
             tempStrAns = removeTrailingZeros(tempStrAns);
@@ -542,6 +546,7 @@ wstring Computer::calculatePercentage(wstring entry)
             double_t double_t1 = stod(number1);
             double_t double_t2 = stod(number2) / 100 * double_t1;
 
+            addToTrace(L"---Calculate: " + number1 + L"+(" + number2 + L"/100*" + number1 + L")\r\n");
             double_t tempAns = double_t1 + double_t2;
             wstring tempStrAns = to_wstring(tempAns);
             tempStrAns = removeTrailingZeros(tempStrAns);
@@ -569,6 +574,7 @@ wstring Computer::calculatePercentage(wstring entry)
             }
             double_t double_t1 = stod(number1);
             double_t double_t2 = stod(number2) / 100 * double_t1;
+            addToTrace(L"---Calculate: " + number1 + L"-(" + number2 + L"/100*" + number1 + L")\r\n");
             double_t tempAns = double_t1 - double_t2;
             wstring tempStrAns = to_wstring(tempAns);
             tempStrAns = removeTrailingZeros(tempStrAns);
