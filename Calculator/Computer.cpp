@@ -250,19 +250,22 @@ wstring Computer::calculate(wstring entry)
                 }
                 else if (containsDecimal(number2))
                 {
-                    addToTrace(L"String {" + number2 + L"} contains '.'\r\n");
+                    addToTrace(L"---String {" + number2 + L"} contains '.'\r\n");
                     addToTrace(L"---Calculate: " + number1 + L"+(" + number2 + L" * " + number1 + L")\r\n");
                     double_t tempAns = stoll(number1) + (stod(number2) * stod(number1));
                     tempStrAns = to_wstring(tempAns);
                 }
                 else
                 {
+                    addToTrace(L"--Neither number contains decimal\r\n");
+                    addToTrace(L"---Calculate: " + number1 + L" * " + number2 + L"\r\n");
                     long long tempAns = stoll(number1) * stoll(number2);
                     tempStrAns = to_wstring(tempAns);
                 }
             }
             else
             {
+                addToTrace(L"---Calculate: " + number1 + L" * " + number2 + L"\r\n");
                 double_t tempAns = stod(number1) * stod(number2);
                 tempStrAns = to_wstring(tempAns);
             }
@@ -314,12 +317,15 @@ wstring Computer::calculate(wstring entry)
                 }
                 else
                 {
+                    addToTrace(L"--Neither number contains decimal\r\n");
+                    addToTrace(L"---Calculate: " + number1 + L" / " + number2 + L"\r\n");
                     long long tempAns = stoll(number1) / stoll(number2);
                     tempStrAns = to_wstring(tempAns);
                 }  
             }
             else
             {
+                addToTrace(L"---Calculate: " + number1 + L" / " + number2 + L"\r\n");
                 double_t tempAns = stod(number1) / stod(number2);
                 tempStrAns = to_wstring(tempAns);
             }
@@ -353,11 +359,13 @@ wstring Computer::calculate(wstring entry)
             if (stoll(number1) > 10000000 or stoll(number2) > 10000000)
             {
                 addToTrace(L"--numbers are to large for floating point computation\r\n-");
+                addToTrace(L"---Calculate: " + number1 + L" + " + number2 + L"\r\n");
                 long long tempAns = stoll(number1) + stoll(number2);
                 tempStrAns = to_wstring(tempAns);
             }
             else
             {
+                addToTrace(L"---Calculate: " + number1 + L" + " + number2 + L"\r\n");
                 double_t tempAns = stod(number1) + stod(number2);
                 tempStrAns = to_wstring(tempAns);
             }
@@ -388,11 +396,13 @@ wstring Computer::calculate(wstring entry)
             if (stoll(number1) > 10000000 or stoll(number2) > 10000000)
             {
                 addToTrace(L"--numbers are to large for floating point computation\r\n-");
+                addToTrace(L"---Calculate: " + number1 + L" - " + number2 + L"\r\n");
                 long long tempAns = stoll(number1) - stoll(number2);
                 tempStrAns = to_wstring(tempAns);
             }
             else
             {
+                addToTrace(L"---Calculate: " + number1 + L" - " + number2 + L"\r\n");
                 double_t tempAns = stod(number1) - stod(number2);
                 tempStrAns = to_wstring(tempAns);
             }

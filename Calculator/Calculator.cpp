@@ -754,7 +754,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         }
         case(ID_BUTTON_C): {
-            if (state == 1)
+            if (state == 1 or state == 2)
             {
                 state = 0;
             }
@@ -765,7 +765,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         }
         case(ID_BUTTON_CE): {
-            if (state == 1)
+            if (state == 1 or state == 2)
             {
                 state = 0;
             }
@@ -785,8 +785,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             {
                 entry = L"SYNTAX ERROR";
             }
+            if (entry.find(L'ERROR') != wstring::npos)
+            {
+                state = 2;
+            }
+            else
+            {
+                state = 1;
+            }
             SetWindowText(hwndTextTrace, computer.getTraceHistory().c_str());
-            state = 1;
+            TCHAR debugStr[100];
+            wsprintf(debugStr, TEXT("state: %i\n"), LOWORD(state));
+            OutputDebugString(debugStr);
             break;
         }
         case(ID_BUTTON_PER): {
@@ -831,27 +841,30 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 //  if the state of the calculator is 1 (happens after "=" or "%" is pressed)
 //  then clear the entry and start fresh
 void updateEntry(wstring str) {
-    if (state == 1 or (entry == L"0" and str != L"."))
+    if (state == 2)
+    {
+        // Do nothing
+    }
+    else if ((state == 1 or (entry == L"0" and str != L".")))
     {
         entry = L"";
         state = 0;
+        entry = entry + str;
     }
-    entry = entry + str;
+    else if (state == 0)
+    {
+        entry = entry + str;
+    }
 }
 
 // At some point it might be worth making a state for if an error happens
 void checkEntryError(wstring str) {
-    if (entry != L"SYNTAX ERROR" and entry != L"DIV BY 0 ERROR" and entry != L"OVERFLOW ERROR" and entry != L"UNDERFLOW ERROR")
+    if (state != 2)
     {
         entry = entry + str;
         if (state == 1)
         {
             state = 0;
         }
-    }
-    else if (str == L"-")
-    {
-        state = 0;
-        entry = L"-";
     }
 }
