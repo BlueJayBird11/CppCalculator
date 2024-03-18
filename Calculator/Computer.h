@@ -13,6 +13,8 @@ class Computer
 {
 private:
     wstring traceHistory;
+    int state;
+    int countTrace;
     bool doTrace = false;
     int stringToVector(wstring, vector<wstring>&);
     bool isANumber(char charater);
@@ -23,9 +25,12 @@ private:
 
 public:
     void addToTrace(wstring str);
+    void prependTrace(wstring entry);
     wstring calculate(wstring entry);
     wstring calculatePercentage(wstring entry);
     wstring getTraceHistory();
+    void changeState(int newState);
+    int getState();
     void activateTrace();
     void deactivateTrace();
     void clearTrace();

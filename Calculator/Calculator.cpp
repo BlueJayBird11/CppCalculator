@@ -31,6 +31,7 @@
 #define ID_BUTTON_TRACE_ON 21
 #define ID_BUTTON_TRACE_OFF 22
 #define ID_TEXT_TRACE 23
+#define ID_TEXT_TRACE_INFO 24
 
 // Global variables
 
@@ -44,7 +45,7 @@ std::wstring entry = L"";
 
 Computer computer;
 
-int state = 0;
+// int state = 0;
 
 void updateEntry(wstring);
 void checkEntryError(wstring);
@@ -187,6 +188,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     static HWND hwndTextTrace = NULL;
     static HWND hwndOutputText = NULL;
+    static HWND hwndTraceInfo = NULL;
     // TCITEM tie;
     TCITEM tie = { 0 };
 
@@ -252,15 +254,31 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             TEXT(""),  
             WS_VISIBLE | WS_CHILD | WS_VSCROLL | ES_LEFT | ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY,
             10,         // x position
-            30,         // y position
+            90,         // y position
             360,        // Width of the text block
-            410,         // Height of the text block
+            340,         // Height of the text block
             hWnd,       // Parent window
             (HMENU)ID_TEXT_TRACE, // Identifier for the static control (optional, can be NULL if not using)
             (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
             NULL);      // Pointer not needed
 
         ShowWindow(hwndTextTrace, SW_HIDE);
+
+        hwndTraceInfo = CreateWindow(
+            TEXT("STATIC"),  // Predefined class; STATIC for text
+            TEXT(""),  // Text to be displayed
+            WS_VISIBLE | WS_CHILD | SS_LEFT,  // Style: Visible, a child window, right-aligned text
+            10,         // x position
+            30,         // y position
+            360,        // Width of the text block
+            50,         // Height of the text block
+            hWnd,       // Parent window
+            (HMENU)ID_TEXT_TRACE_INFO, // Identifier for the static control (optional, can be NULL if not using)
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
+            NULL);      // Pointer not needed
+
+        ShowWindow(hwndTraceInfo, SW_HIDE);
+
 
         // Create a push button 1
         hwndButton1 = CreateWindow(
@@ -567,7 +585,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         HDC hdcStatic = (HDC)wParam;
         HWND hwndStatic = (HWND)lParam;
 
-        if (GetDlgCtrlID(hwndStatic) == ID_TEXT_OUTPUT or GetDlgCtrlID(hwndStatic) == ID_TEXT_TRACE) // Check if this is your static control
+        if (GetDlgCtrlID(hwndStatic) == ID_TEXT_OUTPUT or GetDlgCtrlID(hwndStatic) == ID_TEXT_TRACE or GetDlgCtrlID(hwndStatic) == ID_TEXT_TRACE_INFO) // Check if this is your static control
         {
             // Set the text color
             // SetTextColor(hdcStatic, RGB(255, 0, 0)); // Red text
@@ -621,6 +639,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 ShowWindow(hwndButtonTraceOff, SW_SHOW);
 
                 ShowWindow(hwndTextTrace, SW_HIDE);
+                ShowWindow(hwndTraceInfo, SW_HIDE);
 
             }
             else if (iPage == 1)
@@ -652,6 +671,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 ShowWindow(hwndButtonTraceOff, SW_HIDE);
 
                 ShowWindow(hwndTextTrace, SW_SHOW);
+                ShowWindow(hwndTraceInfo, SW_SHOW);
 
             }
         // }
@@ -754,9 +774,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         }
         case(ID_BUTTON_C): {
+            int state = computer.getState();
             if (state == 1 or state == 2)
             {
-                state = 0;
+                computer.changeState(0);
+                // state = 0;
             }
             entry = L"";
             computer.clearTrace();
@@ -765,9 +787,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         }
         case(ID_BUTTON_CE): {
+            int state = computer.getState();
             if (state == 1 or state == 2)
             {
-                state = 0;
+                computer.changeState(0);
+                // state = 0;
             }
             entry = L"";
             SetWindowText(hwndOutputText, entry.c_str());
@@ -785,18 +809,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             {
                 entry = L"SYNTAX ERROR";
             }
-            if (entry.find(L'ERROR') != wstring::npos)
+            /*if (entry.find(L'ERROR') != wstring::npos)
             {
                 state = 2;
             }
             else
             {
                 state = 1;
-            }
+            }*/
             SetWindowText(hwndTextTrace, computer.getTraceHistory().c_str());
-            TCHAR debugStr[100];
-            wsprintf(debugStr, TEXT("state: %i\n"), LOWORD(state));
-            OutputDebugString(debugStr);
             break;
         }
         case(ID_BUTTON_PER): {
@@ -808,7 +829,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             {
                 entry = L"SYNTAX ERROR";
             }   SetWindowText(hwndTextTrace, computer.getTraceHistory().c_str());
-            state = 1;
+            // state = 1;
             break;
 
         }
@@ -841,6 +862,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 //  if the state of the calculator is 1 (happens after "=" or "%" is pressed)
 //  then clear the entry and start fresh
 void updateEntry(wstring str) {
+    int state = computer.getState();
     if (state == 2)
     {
         // Do nothing
@@ -848,7 +870,8 @@ void updateEntry(wstring str) {
     else if ((state == 1 or (entry == L"0" and str != L".")))
     {
         entry = L"";
-        state = 0;
+        //state = 0;
+        computer.changeState(0);
         entry = entry + str;
     }
     else if (state == 0)
@@ -859,12 +882,13 @@ void updateEntry(wstring str) {
 
 // At some point it might be worth making a state for if an error happens
 void checkEntryError(wstring str) {
+    int state = computer.getState();
     if (state != 2)
     {
         entry = entry + str;
         if (state == 1)
         {
-            state = 0;
+            computer.changeState(0);
         }
     }
 }
