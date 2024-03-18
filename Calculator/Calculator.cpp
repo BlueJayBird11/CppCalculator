@@ -276,7 +276,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             (HMENU)ID_TEXT_TRACE_INFO, // Identifier for the static control (optional, can be NULL if not using)
             (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
             NULL);      // Pointer not needed
-
+        SetWindowText(hwndTraceInfo, computer.getTraceInfo().c_str());
         ShowWindow(hwndTraceInfo, SW_HIDE);
 
 
@@ -783,6 +783,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             entry = L"";
             computer.clearTrace();
             SetWindowText(hwndTextTrace, computer.getTraceHistory().c_str());
+            SetWindowText(hwndTraceInfo, computer.getTraceInfo().c_str());
             break;
 
         }
@@ -818,6 +819,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 state = 1;
             }*/
             SetWindowText(hwndTextTrace, computer.getTraceHistory().c_str());
+            SetWindowText(hwndTraceInfo, computer.getTraceInfo().c_str());
             break;
         }
         case(ID_BUTTON_PER): {
@@ -827,8 +829,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             }
             catch (const std::exception&)
             {
+                computer.changeState(2);
                 entry = L"SYNTAX ERROR";
-            }   SetWindowText(hwndTextTrace, computer.getTraceHistory().c_str());
+            }   
+            SetWindowText(hwndTextTrace, computer.getTraceHistory().c_str());
+            SetWindowText(hwndTraceInfo, computer.getTraceInfo().c_str());
             // state = 1;
             break;
 

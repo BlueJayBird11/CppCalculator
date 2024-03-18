@@ -678,6 +678,11 @@ wstring Computer::calculatePercentage(wstring entry)
     return items[0];
 }
 
+wstring Computer::getTraceInfo()
+{
+    return L"State: " + to_wstring(state) + L"\nCount: " + to_wstring(countTrace);
+}
+
 wstring Computer::getTraceHistory()
 {
     return traceHistory;
@@ -705,5 +710,6 @@ void Computer::deactivateTrace()
 
 void Computer::clearTrace()
 {
+    countTrace = 0;
     traceHistory = L"";
 }

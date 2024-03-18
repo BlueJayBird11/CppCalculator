@@ -28,6 +28,7 @@ public:
     void prependTrace(wstring entry);
     wstring calculate(wstring entry);
     wstring calculatePercentage(wstring entry);
+    wstring getTraceInfo();
     wstring getTraceHistory();
     void changeState(int newState);
     int getState();
