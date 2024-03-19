@@ -1,5 +1,5 @@
 #pragma once
-// Computer.h
+
 #ifndef COMPUTER_H
 #define COMPUTER_H
 
@@ -26,7 +26,6 @@ private:
 
 public:
     void addToTrace(wstring str);
-    void prependTrace(wstring entry);
     wstring calculate(wstring entry);
     wstring calculatePercentage(wstring entry);
     wstring getTraceInfo();
@@ -38,4 +37,4 @@ public:
     void clearTrace();
 };
 
-#endif // COMPUTER_H
+#endif
