@@ -32,5 +32,8 @@ For examples:
 
 This was done as it allows for future inputs to easily be added in if nessessary. It also allows for simple syntax checking before calculations.
 
+## Errors
+If an error is picked, for example a Syntax Error, the error is displayed and will not allow input until CE or C is clicked.
+
 ## Other notes
 There are a large count of decisions being made largely because the input is turned into vector and is having it's syntax checked.
