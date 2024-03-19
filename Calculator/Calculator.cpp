@@ -8,7 +8,7 @@
 #pragma comment(lib, "Comctl32.lib")
 
 
-#define ID_BUTTON1 1 // Button identifier
+#define ID_BUTTON1 1
 #define ID_BUTTON2 2
 #define ID_BUTTON3 3
 #define ID_BUTTON4 4
@@ -211,9 +211,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     // NMHDR* pNmhdr = (NMHDR*)lParam;
     NMHDR* pNmhdr = reinterpret_cast<NMHDR*>(lParam);
-    //TCHAR debugStr[100];
-    //wsprintf(debugStr, TEXT("Test if loop\n"));
-    //OutputDebugString(debugStr);
 
     int iPage;
 
@@ -602,13 +599,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 
     case WM_NOTIFY:
-        //if (pNmhdr->idFrom == 1 && pNmhdr->code == TCN_SELCHANGE) // Check if this is a notification from your tab control.
-        //{
             iPage = TabCtrl_GetCurSel(pNmhdr->hwndFrom);
-            //TCHAR debugStr[100];
-            //wsprintf(debugStr, TEXT("Here: %d\n"), iPage);
-            //OutputDebugString(debugStr);
-
 
             if (iPage == 0)
             {
@@ -674,7 +665,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 ShowWindow(hwndTraceInfo, SW_SHOW);
 
             }
-        // }
         break;
     case WM_DESTROY:
         PostQuitMessage(0);
@@ -683,10 +673,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         switch (LOWORD(wParam)) {
         case SB_LINEUP: // User scrolled up
-            // TODO: Move the static control or its content up
             break;
         case SB_LINEDOWN: // User scrolled down
-            // TODO: Move the static control or its content down
             break;
         }
         return 0;
@@ -699,7 +687,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         switch (LOWORD(wParam))
         {
         case(ID_BUTTON1): {
-            // MessageBox(hWnd, TEXT("1 Button clicked!"), TEXT("Message"), MB_OK);
             updateEntry(L"1");
             break;
         }
@@ -802,22 +789,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             try
             {
                 entry = computer.calculate(entry);
-                //TCHAR debugStr[100];
-                //wsprintf(debugStr, TEXT("Here: %s\n"), entry.c_str());
-                //OutputDebugString(debugStr);
             }
             catch (const std::exception&)
             {
                 entry = L"SYNTAX ERROR";
             }
-            /*if (entry.find(L'ERROR') != wstring::npos)
-            {
-                state = 2;
-            }
-            else
-            {
-                state = 1;
-            }*/
             SetWindowText(hwndTextTrace, computer.getTraceHistory().c_str());
             SetWindowText(hwndTraceInfo, computer.getTraceInfo().c_str());
             break;
@@ -834,7 +810,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             }   
             SetWindowText(hwndTextTrace, computer.getTraceHistory().c_str());
             SetWindowText(hwndTraceInfo, computer.getTraceInfo().c_str());
-            // state = 1;
             break;
 
         }

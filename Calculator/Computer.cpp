@@ -56,6 +56,7 @@ bool Computer::isValidChar(char charater)
     return false;
 }
 
+// removes trailing zeros: 2.0500 -> 2.05
 wstring Computer::removeTrailingZeros(wstring str) {
     // Check if the string contains a decimal point.
     addToTrace(L"-REMOVE TRAILING ZEROS IF ANY\r\n");
@@ -93,14 +94,7 @@ void Computer::addToTrace(wstring entry)
     }
 }
 
-void Computer::prependTrace(wstring entry)
-{
-    if (doTrace)
-    {
-        traceHistory = entry + traceHistory;
-    }
-}
-
+// turns the entry into a vector<wstring> with the numbers and operators
 int Computer::stringToVector(wstring entry, vector<wstring>& items)
 {
     clearTrace();
@@ -219,9 +213,9 @@ int Computer::stringToVector(wstring entry, vector<wstring>& items)
     return 0;
 }
 
+// The calculation for the "=" button
 wstring Computer::calculate(wstring entry)
 {
-    addToTrace(L"Entry: " + entry + L"\r\n");
     wstring answer = L"0";
     countTrace = 0;
 
@@ -237,7 +231,9 @@ wstring Computer::calculate(wstring entry)
 
     // fill items vector
     int result = stringToVector(entry, items);
+    lastEntry = entry;
 
+    // 0 if no errors, 1 if error
     if (result == 1)
     {
         countTrace++;
@@ -496,11 +492,11 @@ wstring Computer::calculate(wstring entry)
     return answer;
 }
 
+// The calculation for the "%" button
 wstring Computer::calculatePercentage(wstring entry)
 {
     clearTrace();
     countTrace = 0;
-    addToTrace(L"Entry (percentage mode): " + entry + L"\r\n");
     wstring answer = L"0";
 
     if (entry.length() == 0)
@@ -516,6 +512,9 @@ wstring Computer::calculatePercentage(wstring entry)
     // fill items vector
     int result = stringToVector(entry, items);
 
+    lastEntry = entry + L" (percentage mode)";
+
+    // 0 if no errors, 1 if error
     if (result == 1)
     {
         countTrace++;
@@ -680,7 +679,7 @@ wstring Computer::calculatePercentage(wstring entry)
 
 wstring Computer::getTraceInfo()
 {
-    return L"State: " + to_wstring(state) + L"\nCount: " + to_wstring(countTrace);
+    return L"State: " + to_wstring(state) + L"\nCount: " + to_wstring(countTrace) + L"\nLast Entry: " + lastEntry;
 }
 
 wstring Computer::getTraceHistory()
@@ -712,4 +711,5 @@ void Computer::clearTrace()
 {
     countTrace = 0;
     traceHistory = L"";
+    lastEntry = L"";
 }

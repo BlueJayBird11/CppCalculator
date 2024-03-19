@@ -15,6 +15,7 @@ private:
     wstring traceHistory;
     int state;
     int countTrace;
+    wstring lastEntry;
     bool doTrace = false;
     int stringToVector(wstring, vector<wstring>&);
     bool isANumber(char charater);
