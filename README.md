@@ -1,8 +1,6 @@
 # CppCalculator
  
 ## Preface
-This program was made for an interview I had with the company VS Merlot.
-
 It uses standard C++ (not Managed C++) with the default Visual Studio compiler and usees user interfaces that are bundled with MSVC: 
 
 https://learn.microsoft.com/en-us/cpp/windows/walkthrough-creating-windows-desktop-applications-cpp?view=msvc-170
